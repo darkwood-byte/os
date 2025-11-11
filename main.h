@@ -9,6 +9,7 @@
 
 //utils
 #include "sleepk.h"
+#include "memory.h"
 
 //debug
 #include "printk.h"
