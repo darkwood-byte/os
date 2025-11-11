@@ -38,6 +38,11 @@ uint8_t handle_simple(char *input) {
         printk("\n------------------\nused memory: %d\nfree memory: %d\n------------------", get_used_memory(), get_free_memory());
         return 1;
     }
+    else if (!strcmp(input, "help")) {
+        printk("\n  ----help_menu--------------------------------------\n cd: moves you to a directory,  if none is given it returns home.\n root:moves you to the root folder\n ls: shows the contents of the current folder\n quit: closes the os\n cory: draws the mascot\n logo: draws the logo\n mem: shows memory ussage:\n touch: this makes a file with the name you give it\n mdir: makes a folder\n help: helps you find the commands =]\n  ---------------------------------------------------\n\n");
+        return 1;
+    }
+    else
     return 0;
 }
 
