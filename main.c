@@ -21,17 +21,19 @@ struct item {
 
 void bronx(void) {
     char input[128];
-    int len = get_uart_input(input, sizeof(input));
+    uint32_t len = get_uart_input(input, sizeof(input));
     
     printk("Je typte: '%s'\n", input);
     printk("Lengte: %d chars\n", len);
+    return;
 }
+
+
 
 void kernel_main(void) {
     memset(__bss, 0, ((size_t)__bss_end - (size_t)__bss));
     
-    printk("Hello from RISC-V kernel!\n");
-    printk("UART initialized at 0x%x\n", UART_BASE);
+   print_start();
     
     char *path = "/home";
     while (1) {

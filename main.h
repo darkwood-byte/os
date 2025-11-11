@@ -8,10 +8,12 @@
 #include "memset.h"
 
 //utils
-
 #include "sleepk.h"
 
 //debug
 #include "printk.h"
+
+//uiterlijk
+#include "logo.h"
 
 #endif
