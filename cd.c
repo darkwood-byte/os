@@ -44,7 +44,7 @@ void build_full_path(void) {
     path = path_buffer;
 }
 
-void change_directory(const char *target) {
+uint8_t change_directory(const char *target) {
     if (target == NULL || strlen(target) == 0 || strcmp(target, "~") == 0) {
         // cd to home
         item *home = root_directory->child;
@@ -70,11 +70,12 @@ void change_directory(const char *target) {
             current_directory = target_dir;
         } else {
             printk("cd: %s: No such directory\n", target);
-            return;
+            return 1;
         }
     }
     
     build_full_path();
+    return 0;
 }
 
 #endif

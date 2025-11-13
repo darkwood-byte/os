@@ -1,4 +1,4 @@
-build/file.o: file.c file.h types.h memory.h printk.h uart.h
+build/file.o: file.c file.h types.h memory.h printk.h uart.h string.h
 
 file.h:
 
@@ -9,3 +9,5 @@ memory.h:
 printk.h:
 
 uart.h:
+
+string.h:

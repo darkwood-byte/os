@@ -4,7 +4,7 @@
 #include "file.h"
 #include "printk.h"
 
-void change_directory(const char *target);
+uint8_t change_directory(const char *target);
 void build_full_path(void);
 
 #endif
