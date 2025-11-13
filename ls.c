@@ -28,48 +28,18 @@ void ls_complex(char *args) {
         ls_simple();
         return;
     }
-    
-    // Sla de huidige directory diepte op
-    uint8_t depth_counter = 0;
-    
-    // Maak een kopie van args om te tokenizen (om de originele string niet te wijzigen)
-    char path_copy[256];
-    strcpy(path_copy, args);
-    
-    // Tokenize het pad op '/' scheidingstekens
-    char *token = strtok(path_copy, "/");
-    uint8_t result = 0;
-    
-    // Probeer naar elke directory in het pad te gaan
-    while (token != NULL) {
-        result = change_directory(token);
-        
-        if (result == 1) {
-            // Directory bestaat niet
-            printk("Directory '%s' does not exist\n", token);
-            
-            // Ga terug naar de oorspronkelijke directory
-            while (depth_counter > 0) {
-                change_directory("..");
-                depth_counter--;
-            }
-            
-            // Voer ls_simple uit in de oorspronkelijke directory
-            ls_simple();
-            return;
-        } else {
-            // Directory change succesvol, verhoog de teller
-            depth_counter++;
-        }
-        
-        token = strtok(NULL, "/");
-    }
-    
-    // Als we hier zijn, zijn we succesvol naar de doel directory gegaan
-    // Voer ls_simple uit in de nieuwe directory
+    if(change_directory(args))return;
     ls_simple();
-    
-    // Ga terug naar de oorspronkelijke directory
+    uint32_t depth_counter = 1;
+    uint8_t flag = 0;
+   for (uint32_t i = 0; args[i] !='\0'; i++ ){
+        flag = 0;
+        if (args[i] == '/'){
+            depth_counter++;
+            flag = 1;
+        }
+   }
+   if (flag)depth_counter--;
     while (depth_counter > 0) {
         change_directory("..");
         depth_counter--;
