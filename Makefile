@@ -1,7 +1,7 @@
 CC = clang
 TARGET = riscv32-unknown-elf
 OUTPUT = build/main.elf
-SOURCES = main.c #printk.c #uart.cmemset.c sleepk.c uart.c printk.c logo.c memory.c cd.c file.c ls.c shell.c touch.c string.c
+SOURCES = main.c SBI.c printk.c #uart.cmemset.c sleepk.c uart.c printk.c logo.c memory.c cd.c file.c ls.c shell.c touch.c string.c
 OBJECTS = $(SOURCES:%.c=build/%.o)
 LINKER_SCRIPT = kernel.ld
 DEPFILES = $(SOURCES:%.c=build/%.d)

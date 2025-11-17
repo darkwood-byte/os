@@ -3,14 +3,8 @@
 
 #include "printk.h"
 
- void putchar(char ch) {
-    __asm__ __volatile__ (
-        "li a7, 1\n"
-        "ecall"
-        : 
-        : "r"((uint32_t)ch)
-        : "a7", "memory"
-    );
+void putchar(char ch) {
+    sbi_call(ch, 0, 0, 0, 0, 0, 0, 0x01, ch);
 }
 
 static void utoa(uint32_t num, char *buf, uint32_t base) {
