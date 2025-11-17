@@ -1,12 +1,12 @@
 CC = clang
 TARGET = riscv32-unknown-elf
 OUTPUT = build/main.elf
-SOURCES = main.c memset.c sleepk.c uart.c printk.c logo.c memory.c cd.c file.c ls.c shell.c touch.c string.c
+SOURCES = main.c #printk.c #uart.cmemset.c sleepk.c uart.c printk.c logo.c memory.c cd.c file.c ls.c shell.c touch.c string.c
 OBJECTS = $(SOURCES:%.c=build/%.o)
 LINKER_SCRIPT = kernel.ld
 DEPFILES = $(SOURCES:%.c=build/%.d)
 
-HEADERS = main.h types.h memset.h  sleepk.h uart.h printk.h logo.h memory.h cd.h file.h ls.h shell.h touch.h string.h
+HEADERS = #main.h types.h memset.h  sleepk.h uart.h printk.h logo.h memory.h cd.h file.h ls.h shell.h touch.h string.h
 
 # Compile flags
 CFLAGS = -std=c11 -O2 -g3 -Wall -Wextra -Wconversion -Wpedantic \
@@ -38,7 +38,7 @@ disasm: $(OUTPUT)
 
 # Commando om QEMU te starten
 run: $(OUTPUT)
-	cd ~/os && \
+	\
 	qemu-system-riscv32 -m 128M -machine virt -smp 1 \
 	  -bios ~/opensbi-1.3-rv-bin/share/opensbi/ilp32/generic/firmware/fw_dynamic.bin \
 	  -kernel build/main.elf \
