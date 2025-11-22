@@ -3,7 +3,8 @@
 
 #include "types.h"
 #include "SBI.h"
+#include "variadic.h"
 
-void printk(const char *fmt, ...);
+void k_printf(const char *fmt, ...);
 
 #endif

@@ -1,7 +1,13 @@
-build/main.o: main.c printk.h types.h SBI.h
+build/main.o: main.c main.h types.h print_k.h SBI.h variadic.h panic_k.h
 
-printk.h:
+main.h:
 
 types.h:
 
+print_k.h:
+
 SBI.h:
+
+variadic.h:
+
+panic_k.h:

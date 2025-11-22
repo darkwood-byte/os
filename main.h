@@ -4,28 +4,8 @@
 //data types
 #include "types.h"
 
-//boot
-#include "memset.h"
-
-//utils
-#include "sleepk.h"
-#include "memory.h"
-
 //debug
-#include "printk.h"
-
-//uiterlijk
-#include "logo.h"
-
-//filesystem
-#include "file.h"
-
-//commands
-#include "cd.h"
-#include "ls.h"
-#include "touch.h"
-
-//shell
-#include "shell.h"
+#include "print_k.h"
+#include "panic_k.h"
 
 #endif

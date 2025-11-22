@@ -1,12 +1,12 @@
 CC = clang
 TARGET = riscv32-unknown-elf
 OUTPUT = build/main.elf
-SOURCES = main.c SBI.c printk.c #uart.cmemset.c sleepk.c uart.c printk.c logo.c memory.c cd.c file.c ls.c shell.c touch.c string.c
+SOURCES = main.c printk.c SBI.c
 OBJECTS = $(SOURCES:%.c=build/%.o)
 LINKER_SCRIPT = kernel.ld
 DEPFILES = $(SOURCES:%.c=build/%.d)
 
-HEADERS = #main.h types.h memset.h  sleepk.h uart.h printk.h logo.h memory.h cd.h file.h ls.h shell.h touch.h string.h
+HEADERS = main.h 
 
 # Compile flags
 CFLAGS = -std=c11 -O2 -g3 -Wall -Wextra -Wconversion -Wpedantic \
