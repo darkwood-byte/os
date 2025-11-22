@@ -1,7 +1,7 @@
 #ifndef PRINTK_C
 #define PRINTK_C
 
-#include "printk.h"
+#include "print_k.h"
 
 void putchar(char ch) {
     sbi_call(ch, 0, 0, 0, 0, 0, 0, 0x01, ch);

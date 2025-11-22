@@ -1,7 +1,7 @@
 CC = clang
 TARGET = riscv32-unknown-elf
 OUTPUT = build/main.elf
-SOURCES = main.c printk.c SBI.c
+SOURCES = main.c print_k.c SBI.c
 OBJECTS = $(SOURCES:%.c=build/%.o)
 LINKER_SCRIPT = kernel.ld
 DEPFILES = $(SOURCES:%.c=build/%.d)
