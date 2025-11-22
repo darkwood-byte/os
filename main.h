@@ -6,6 +6,6 @@
 
 //debug
 #include "print_k.h"
-#include "panic_k.h"
+#include "deps.h"
 
 #endif
