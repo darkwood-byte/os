@@ -25,6 +25,20 @@ int k_strcmp(const char *str1, const char *str2) {
     return *str1 - *str2; 
 }
 
+#define PLC(dest, s) \
+    do {                      \
+        *(dest) = *(s);       \
+        (dest)++;             \
+    } while (0)
+
+#define PLACE_HEX \
+do{ \
+    *dest = '0'; \
+    dest++; \
+    *dest = 'x'; \
+    dest++; \
+}while(0)
+
 void k_sprintf(char* dest,const char* format, ...){
     va_list_rv args;
     va_start_rv(args, format);
@@ -36,9 +50,8 @@ void k_sprintf(char* dest,const char* format, ...){
 
     while (*p) {
         if (*p != '%') {
-            *dest = *p;
+            PLC(dest, p);
             p++;
-            dest++;
             continue;
         }
 
@@ -49,8 +62,7 @@ void k_sprintf(char* dest,const char* format, ...){
             int32_t val = va_arg_rv(args, int32_t);
             itoa(val, buf, 10);
             for (char *s = buf; *s; s++){
-                *dest = *s;
-                dest++;
+               PLC(dest, s);
             }
             break;
         }
@@ -58,36 +70,27 @@ void k_sprintf(char* dest,const char* format, ...){
             uint32_t val = va_arg_rv(args, uint32_t);
             utoa(val, buf, 10);
             for (char *s = buf; *s; s++){
-                *dest = *s;
-                dest++;
+                PLC(dest, s);
             }
             break;
         }
 
         case 'x': {
             uint32_t val = va_arg_rv(args, uint32_t);
-            *dest = '0';
-            dest++;
-            *dest = 'x';
-            dest++;
+           PLACE_HEX;
             utoa(val, buf, 16);
             for (char *s = buf; *s; s++){
-                *dest = *s;
-                dest++;
+                PLC(dest, s);
             }
             break;
         }
 
         case 'p': {
-            *dest = '0';
-            dest++;
-            *dest = 'x';
-            dest++;
+            PLACE_HEX;
             uint32_t val = va_arg_rv(args, uint32_t);
             utoa(val, buf, 16);
             for (char *s = buf; *s; s++){
-                *dest = *s;
-                dest++;
+                PLC(dest, s);
             }
             break;
         }
@@ -96,16 +99,14 @@ void k_sprintf(char* dest,const char* format, ...){
             char *str = va_arg_rv(args, char*);
             if (!str) str = "(null)";
             for (; *str; str++){
-                *dest = *str;
-                dest++;
+                PLC(dest, str);
             }
             break;
         }
 
         case 'c': {
             char c = (char)va_arg_rv(args, int);
-           *dest = c;
-            dest++;
+           PLC(dest, &c);
             break;
         }
 
@@ -118,8 +119,7 @@ void k_sprintf(char* dest,const char* format, ...){
         default: {
             *dest = '%';
             dest++;
-            *dest = *p;
-            dest++;
+           PLC(dest, p);
             break;
         }
         }
