@@ -31,7 +31,11 @@ void kernel_main(void) {
     str2 = "Oxelhaer";
     int cmp2 = k_strcmp(str1, str2);
     k_printf("k_strcmp(\"%s\", \"%s\") = %d\n", str1, str2, cmp2);
-
+    char buffer[200];
+    k_sprintf(buffer, "test%d\n", 5);
+    k_printf("%s\n", buffer);
+    char *t = "5";
+    k_printf("itoa(5) = %s\n", t);
     k_panic("boot-up succeeded, what we do?!", "");
     while(1);
 }

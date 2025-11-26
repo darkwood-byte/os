@@ -8,4 +8,7 @@
 #include "print_k.h"
 #include "deps.h"
 
+//utils
+#include "str.h"
+
 #endif
