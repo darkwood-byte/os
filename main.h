@@ -11,4 +11,11 @@
 //utils
 #include "str.h"
 
+//CSR access and trap
+#include "csr.h"
+#include "trap_k.h"
+
+//Memory management
+#include "memory.h"
+
 #endif

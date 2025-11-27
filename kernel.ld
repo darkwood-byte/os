@@ -19,4 +19,8 @@ __bss_end = .;
 . = ALIGN(4);
 . += 128 * 1024; /* 128KB stack size */
 __stack_top = .;
+. = ALIGN(4096); /* Align to 4 KiB page boundary */
+__free_ram_start = .;
+. += 32 * 1024 * 1024; /* 32 MiB free RAM for page frames */
+__free_ram_end = .;
 }

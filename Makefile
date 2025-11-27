@@ -1,7 +1,7 @@
 CC = clang
 TARGET = riscv32-unknown-elf
 OUTPUT = build/main.elf
-SOURCES = main.c print_k.c SBI.c mem.c str.c oa.c
+SOURCES = main.c print_k.c SBI.c mem.c str.c oa.c memory.c trap_k.c
 OBJECTS = $(SOURCES:%.c=build/%.o)
 LINKER_SCRIPT = kernel.ld
 DEPFILES = $(SOURCES:%.c=build/%.d)
@@ -36,6 +36,14 @@ build/%.o: %.c $(HEADERS)
 disasm: $(OUTPUT)
 	llvm-objdump $(OUTPUT) -d
 
+# Commando om symbol table te bekijken
+symbols: $(OUTPUT)
+	llvm-nm $(OUTPUT)
+
+# Commando om specifiek adres op te zoeken
+addr2line: $(OUTPUT)
+	@echo "Usage: llvm-addr2line -e $(OUTPUT) <address>"
+
 # Commando om QEMU te starten
 run: $(OUTPUT)
 	qemu-system-riscv32 -m 128M -machine virt -smp 1 \
@@ -50,4 +58,4 @@ clean:
 # Clean en rebuild volledig
 rebuild: clean all
 
-.PHONY: all clean disasm run rebuild
+.PHONY: all clean disasm symbols addr2line run rebuild
