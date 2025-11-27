@@ -36,6 +36,7 @@ void kernel_main(void) {
     k_printf("%s\n", buffer);
     char *t = "5";
     k_printf("itoa(5) = %s\n", t);
+    k_printf("new test: %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d\n", 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,  0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
     k_panic("boot-up succeeded, what we do?!", "");
     while(1);
 }

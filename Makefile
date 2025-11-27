@@ -5,12 +5,12 @@ SOURCES = main.c print_k.c SBI.c mem.c str.c oa.c
 OBJECTS = $(SOURCES:%.c=build/%.o)
 LINKER_SCRIPT = kernel.ld
 DEPFILES = $(SOURCES:%.c=build/%.d)
-
 HEADERS = main.h 
 
 # Compile flags
 CFLAGS = -std=c11 -O2 -g3 -Wall -Wextra -Wconversion -Wpedantic \
          -fno-stack-protector -ffreestanding -nostdlib -static \
+         -fno-omit-frame-pointer \
          --target=$(TARGET)
 
 # Link flags (inclusief -fuse-ld=lld dat alleen voor linking nodig is)
@@ -38,7 +38,6 @@ disasm: $(OUTPUT)
 
 # Commando om QEMU te starten
 run: $(OUTPUT)
-	\
 	qemu-system-riscv32 -m 128M -machine virt -smp 1 \
 	  -bios ~/opensbi-1.3-rv-bin/share/opensbi/ilp32/generic/firmware/fw_dynamic.bin \
 	  -kernel build/main.elf \
