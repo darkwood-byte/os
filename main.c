@@ -26,7 +26,7 @@ BLOCKED
 } procstate;
 
 typedef struct {
-int pid; // Process ID
+    uint32_t pid; // Process ID
     procstate pstate; // Process state
     uint32_t psp; // Process stack pointer, wijst ergens in 'pstack'
     uint8_t pstack[1024];// Process stack: 1 KiB per proces
@@ -37,16 +37,46 @@ pcb proclist[MAXPROCS];
 pcb *find_free_pcb(void){
     for(uint32_t i = 0; i < MAXPROCS; i++){
         if(proclist[i].pstate == NOPROC){
-            proclist[i].pid = i;
-             proclist[i].pstate = BLOCKED;
+            proclist[i].pstate = READY;
             return &proclist[i];
         }
     }
     k_panic("no free PCB found due to max proces count, proces id: %d", MAXPROCS);
 }
 
-pcb *spawn_proc(uint32_t entry_point){
-    pcb *block = find_free_pcb();
+pcb *spawn_proc(uint32_t entrypoint){
+    pcb *p = find_free_pcb();
+    if(!p) return NULL;
+
+    /* 1) Zorg dat stack eerst nul is (niet strikt noodzakelijk, maar helpt bij debugging) */
+    memset(p->pstack, 0, sizeof(p->pstack));
+
+    /* 2) p->pid is al gezet door find_free_pcb; zet pstate op READY */
+    p->pstate = READY;
+
+    /* 3) Bepaal top van pstack: we willen psp wijzen naar het laatst gepushte 32-bit woord.
+       p->pstack is een byte-array; we gebruiken een uint32_t-pointer voor pushes. */
+    uintptr_t stack_base = (uintptr_t)&p->pstack[0];
+    uintptr_t stack_top  = stack_base + sizeof(p->pstack); /* adres nét boven laatste byte */
+
+    /* Zorg alignment: sp moet 4-byte aligned (althans voor 32-bit pushes) */
+    uint32_t *sp = (uint32_t*) (stack_top);
+    /* Als stack_top niet 4-aligned is, corrigeer */
+    if (((uintptr_t)sp & 0x3) != 0) {
+        sp = (uint32_t*)(((uintptr_t)sp) & ~(uint32_t) 0x3);
+    }
+
+    for (int i = 0; i < 12; i++) {
+        sp--;      /* stack groeit naar lagere adressen */
+        *sp = 0;   /* init alle register plaatsen met 0 */
+    }
+
+    sp--;
+    *sp = (uint32_t)entrypoint;
+
+    p->psp = (uint32_t)(uintptr_t)sp;
+
+    return p;
 }
 
 void proces_handler(void){
@@ -61,6 +91,8 @@ void k_sp(void){
         }
         else{
             k_printf("p: %d :: state : %d  psp : %p\n", i, proclist[i].pstate, proclist[i].psp);
+            k_printf("&proclist[%d] = %p\n", i, &proclist[i]);
+
         }
     }
     k_printf("\n====end of active pcb's====\n");
