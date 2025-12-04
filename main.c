@@ -2,7 +2,8 @@
 extern char __bss[], __bss_end[], __stack_top[];
 extern char __free_ram_start[], __free_ram_end[];
 
-void kernel_main(void) {
+void kernel_boot(void){
+    k_printf("\nBoot done. . .\n");
     memset(__bss, 0, ((size_t)__bss_end - (size_t)__bss));
     write_csr(stvec, (uint32_t)switch_trap);
     init_memory();
@@ -11,27 +12,70 @@ void kernel_main(void) {
     k_printf("BSS initialized\n");
     k_printf("Trap handler registered at: %p\n", (uint32_t)switch_trap);
     k_printf("Free RAM: %p - %p\n", (uint32_t)__free_ram_start, (uint32_t)__free_ram_end);
+     k_printf("\nKernel Boot done. . .\n");
     
-    // Opdracht 1: CSR test
-    write_csr(sscratch, 0xDEADBEEF);
-    uint32_t ss_val = read_csr(SSCRATCH);
-    k_printf("CSR test: sscratch = %x\n", ss_val);
-    uint32_t stvec_val = read_csr(STVEC);
-    k_printf("CSR test: stvec = %p\n", stvec_val);
-    
-    // Opdracht 2: Kernel trap test
-    k_printf("\n=== Testing Illegal Instruction Trap ===\n");
-    __asm__ __volatile__("csrw scountovf, x0");
-    k_printf("We hebben een kernel trap overleefd!\n");
-    
-    // Weekopdracht: Page frame allocator
-    k_printf("\n=== Testing Page Frame Allocator ===\n");
-    pframe_addr_t pfa0 = pageframalloc(3);
-    k_printf("pfa0 = %p\n", pfa0);
-    pframe_addr_t pfa1 = pageframalloc(1);
-    k_printf("pfa1 = %p\n", pfa1);
-    
-    k_panic("boot-up succeeded, what we do?!", "");
+}
+
+#define MAXPROCS 4
+
+typedef enum {
+NOPROC,
+READY,
+RUNNING,
+BLOCKED
+} procstate;
+
+typedef struct {
+int pid; // Process ID
+    procstate pstate; // Process state
+    uint32_t psp; // Process stack pointer, wijst ergens in 'pstack'
+    uint8_t pstack[1024];// Process stack: 1 KiB per proces
+} pcb; // Process Control Block
+
+pcb proclist[MAXPROCS];
+
+pcb *find_free_pcb(void){
+    for(uint32_t i = 0; i < MAXPROCS; i++){
+        if(proclist[i].pstate == NOPROC){
+            proclist[i].pid = i;
+             proclist[i].pstate = BLOCKED;
+            return &proclist[i];
+        }
+    }
+    k_panic("no free PCB found due to max proces count, proces id: %d", MAXPROCS);
+}
+
+pcb *spawn_proc(uint32_t entry_point){
+    pcb *block = find_free_pcb();
+}
+
+void proces_handler(void){
+    return;
+}
+
+void k_sp(void){
+    k_printf("\n====active pcb's====\n");
+    for (uint32_t i = 0; i < MAXPROCS; i++){
+        if(proclist[i].pstate == NOPROC){
+            k_printf("p: %d :: does not exist\n", i);
+        }
+        else{
+            k_printf("p: %d :: state : %d  psp : %p\n", i, proclist[i].pstate, proclist[i].psp);
+        }
+    }
+    k_printf("\n====end of active pcb's====\n");
+}
+
+void kernel_main(void) {
+    kernel_boot();
+    spawn_proc(0);
+    spawn_proc(0);
+    spawn_proc(0);
+    k_sp();
+    k_printf("sizeof pcb_list: %d\n\n", sizeof(proclist));
+    proces_handler();
+
+    k_panic("\nboot-up succeeded, what we do?!\n", "");
 }
 
 __attribute__((section(".text.boot")))

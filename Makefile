@@ -10,7 +10,6 @@ HEADERS = main.h
 # Compile flags
 CFLAGS = -std=c11 -O2 -g3 -Wall -Wextra -Wconversion -Wpedantic \
          -fno-stack-protector -ffreestanding -nostdlib -static \
-         -fno-omit-frame-pointer \
          --target=$(TARGET)
 
 # Link flags (inclusief -fuse-ld=lld dat alleen voor linking nodig is)
