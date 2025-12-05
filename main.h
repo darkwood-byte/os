@@ -18,4 +18,7 @@
 //Memory management
 #include "memory.h"
 
+//proces mangement
+#include "pcb.h"
+
 #endif

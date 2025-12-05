@@ -1,27 +1,11 @@
 // === DATASTRUCTUREN ===
 #include "main.h"
-#define MAXPROCS 4
+
 
 extern char __bss[], __bss_end[], __stack_top[];
 extern char __free_ram_start[], __free_ram_end[];
 
-typedef enum {
-    NOPROC,
-    READY,
-    RUNNING,
-    BLOCKED
-} procstate;
 
-typedef struct {
-    uint32_t pid;
-    procstate pstate;
-    uint32_t psp;
-    uint8_t pstack[1024];
-} pcb;
-
-pcb proclist[MAXPROCS];
-pcb *currproc = NULL;
-pcb *idleproc = NULL;
 
 void kernel_boot(void){
     k_printf("\nBoot done. . .\n");
@@ -161,12 +145,12 @@ void yield(void) {
         nextproc = currproc;
     }
     
-    // Als GEEN ENKEL proces READY is, val terug naar idle (PID 0)
+    // Als GEEN ENKEL proces READY is, val terug naar idle (PID 0) oftwel kernel
     if (!nextproc) {
         nextproc = idleproc;
     }
     
-    // Als hetzelfde proces, gewoon return (geen switch nodig)
+    // Als hetzelfde proces, gewoon return (geen switch nodig) anders super veel bugs
     if (nextproc == oldproc) {
         return;
     }
@@ -179,9 +163,17 @@ void yield(void) {
     switch_proc(&oldproc->psp, &nextproc->psp);
 }
 
-void k_sleep(uint32_t ms){
-    for (uint32_t i = 0; 200000 * ms > i; i++){
-        __asm__  __volatile__ ("nop");
+void k_sleep(uint32_t ms) {
+    const uint32_t FACTOR = 200000;
+    const uint32_t MAX_MS = 0xffffffff / FACTOR;
+    
+    if (ms > MAX_MS) {
+        ms = MAX_MS;  // Capie 
+    }
+    
+    uint32_t total = ms * FACTOR;
+    for (uint32_t i = 0; i < total; i++) {
+        __asm__ __volatile__ ("nop");
     }
 }
 
@@ -207,21 +199,21 @@ void k_sp(void){
 
 #define block()do{\
     currproc->pstate = NOPROC;\
-    k_printf("blocked proces id:  %d\n");\
+    k_printf("blocked proces id:  %d\n", currproc->pid);\
     yield();\
 }while(0);
 
 #define kill()do{\
     currproc->pstate = NOPROC;\
-    k_printf("killed proces id:  %d\n");\
+    k_printf("killed proces id:  %d\n", currproc->pid);\
     yield();\
 }while(0);
 
-// === TEST PROCESSEN ===
-void proc0(void) {
-    k_printf("\nStart van PID %d\n", currproc->pid);
-     while(1)  {
-        k_printf("proc0 had pid:  %d\n", currproc->pid);
+// === gefixde TEST PROCESSEN ;)===
+/*void proc0(void) {
+    k_printf("\nStart van proc0 op PID: %d\n", currproc->pid);
+     for (uint8_t i = 0; i < 8; i++){
+        k_printf("currently in loop %d from proc0 hosted on PID: %d\n", i, currproc->pid);
         yield();
         k_sleep(1000);
     }
@@ -229,18 +221,32 @@ void proc0(void) {
 }
 
 void proc1(void) {
-    k_printf("\nStart van PID %d\n", currproc->pid);
-     k_printf("proc1 had pid: %d\n", currproc->pid);
-     yield();
-    k_sleep(1000);
-    yield();
-     k_sleep(1000);
-    yield();
-     k_sleep(1000);
-    yield();
-     k_sleep(1000);
-     k_printf("stoping1\n");
+    k_printf("\nStart van proc1 op PID: %d\n", currproc->pid);
+    for (uint8_t i = 0; i < 4; i++){
+        k_printf("currently in loop %d from proc1 hosted on PID: %d\n", i, currproc->pid);
+        yield();
+        k_sleep(1000);
+    }
     kill();
+}*/
+
+void proc0(void) {
+    k_printf("\nStart van PID %d\n", currproc->pid);
+    for (int i = 0; i < 4; i++) {
+        k_printf("%d", currproc->pid);
+        yield();
+        k_sleep(1000);
+    }
+currproc->pstate = BLOCKED;
+}
+void proc1(void) {
+    k_printf("\nStart van PID %d\n",currproc->pid);
+    for (int i = 0; i < 8; i++) {
+        k_printf("%d", currproc->pid);
+        yield();
+        k_sleep(1000);
+    }
+    currproc->pstate = BLOCKED;
 }
 
 // === KERNEL_MAIN ===
@@ -260,7 +266,7 @@ void kernel_main(void) {
     
     yield();
     
-    k_panic("\nboot-up succeeded, now back in PID 0 (idlin')...\n", "");;
+    k_panic("\nboot-up succeeded, now back in PID 0 (idlin forava')...\n", "");;
 }
 
 __attribute__((section(".text.boot")))
