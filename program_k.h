@@ -4,7 +4,6 @@
 #include "deps.h"
 #include "pcb_k.h"
 
-__attribute__((naked))
 void switch_proc(uint32_t *current_psp, uint32_t *next_psp) ;
 
 void yield(void) ;
