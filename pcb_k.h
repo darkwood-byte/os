@@ -2,6 +2,8 @@
 #define PCB_H
 
 #include "types.h"
+#include "deps.h"
+
 #define MAXPROCS 4
 
 typedef enum {
@@ -23,5 +25,7 @@ extern pcb proclist[MAXPROCS];
 extern pcb *currproc;
 
 extern pcb *idleproc;
+
+pcb *spawn_proc(uint32_t entrypoint);
 
 #endif

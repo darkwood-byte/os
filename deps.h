@@ -10,4 +10,10 @@
 //kernel panic
 #include "panic_k.h"
 
+//debug
+#include "print_k.h"
+
+//types
+#include "types.h"
+
 #endif

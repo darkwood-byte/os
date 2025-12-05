@@ -1,11 +1,7 @@
-// === DATASTRUCTUREN ===
 #include "main.h"
-
 
 extern char __bss[], __bss_end[], __stack_top[];
 extern char __free_ram_start[], __free_ram_end[];
-
-
 
 void kernel_boot(void){
     k_printf("\nBoot done. . .\n");
@@ -21,150 +17,8 @@ void kernel_boot(void){
     
 }
 
-// === SPAWN_PROC ===
-pcb *spawn_proc(uint32_t entrypoint) {
-    pcb *p = NULL;
-    
-    // Zoek vrije plek
-    for(uint32_t i = 0; i < MAXPROCS; i++) {
-        if(proclist[i].pstate == NOPROC) {
-            p = &proclist[i];
-            p->pid = i;
-            break;
-        }
-    }
-    
-    if(!p) {
-        k_panic("No free PCB", "");
-        return NULL;
-    }
-    
-    memset(p->pstack, 0, sizeof(p->pstack));
-    p->pstate = READY;
-    
-    // Bereken stack top
-    uintptr_t stack_top = (uintptr_t)&p->pstack[0] + sizeof(p->pstack);
-    uint32_t *sp = (uint32_t*)stack_top;
-    
-    // Align op 4 bytes
-    if (((uintptr_t)sp & 0x3) != 0) {
-        sp = (uint32_t*)(((uintptr_t)sp) & ~(uint32_t)0x3);
-    }
-    
-    // Push 12 nullen voor s11-s0
-    for (int i = 0; i < 12; i++) {
-        sp--;
-        *sp = 0;
-    }
-    
-    // Push entrypoint als ra
-    sp--;
-    *sp = (uint32_t)entrypoint;
-    
-    p->psp = (uint32_t)(uintptr_t)sp;
-    
-    return p;
-}
-
-// === SWITCH_PROC volgens document ===
-__attribute__((naked))
-void switch_proc(uint32_t *current_psp, uint32_t *next_psp) {
-    __asm__ __volatile__(
-        // Stap 1: Save registers op huidige stack
-        "addi sp, sp, -52\n"
-        "sw ra, 0(sp)\n"
-        "sw s0, 4(sp)\n"
-        "sw s1, 8(sp)\n"
-        "sw s2, 12(sp)\n"
-        "sw s3, 16(sp)\n"
-        "sw s4, 20(sp)\n"
-        "sw s5, 24(sp)\n"
-        "sw s6, 28(sp)\n"
-        "sw s7, 32(sp)\n"
-        "sw s8, 36(sp)\n"
-        "sw s9, 40(sp)\n"
-        "sw s10, 44(sp)\n"
-        "sw s11, 48(sp)\n"
-        
-        // Stap 2 & 3: Switch stack pointer
-        // *current_psp = sp
-        "sw sp, 0(a0)\n"
-        // sp = *next_psp
-        "lw sp, 0(a1)\n"
-        
-        // Stap 4: Restore registers van nieuwe stack
-        "lw ra, 0(sp)\n"
-        "lw s0, 4(sp)\n"
-        "lw s1, 8(sp)\n"
-        "lw s2, 12(sp)\n"
-        "lw s3, 16(sp)\n"
-        "lw s4, 20(sp)\n"
-        "lw s5, 24(sp)\n"
-        "lw s6, 28(sp)\n"
-        "lw s7, 32(sp)\n"
-        "lw s8, 36(sp)\n"
-        "lw s9, 40(sp)\n"
-        "lw s10, 44(sp)\n"
-        "lw s11, 48(sp)\n"
-        "addi sp, sp, 52\n"
-        
-        "ret\n"
-    );
-}
-
-// === YIELD functie volgens document ===
-void yield(void) {
-    // Save old currproc voor switch_proc
-    pcb *oldproc = currproc;
-    
-    // Update state van huidig proces
-    if (currproc && currproc->pstate == RUNNING) {
-        currproc->pstate = READY;
-    }
-    
-    // Zoek volgende READY proces (skip idle in eerste instantie)
-    uint32_t start_pid = currproc ? currproc->pid + 1 : 1;
-    pcb *nextproc = NULL;
-    
-    // Eerste ronde: zoek READY processen, SKIP PID 0
-    for (uint32_t i = 0; i < MAXPROCS; i++) {
-        uint32_t check_pid = (start_pid + i) % MAXPROCS;
-        
-        if (check_pid == 0) {
-            continue;  // Skip idle
-        }
-        
-        if (proclist[check_pid].pstate == READY) {
-            nextproc = &proclist[check_pid];
-            break;
-        }
-    }
-    
-    // Als niks gevonden, check of huidig proces zelf READY is
-    if (!nextproc && currproc && currproc->pstate == READY) {
-        nextproc = currproc;
-    }
-    
-    // Als GEEN ENKEL proces READY is, val terug naar idle (PID 0) oftwel kernel
-    if (!nextproc) {
-        nextproc = idleproc;
-    }
-    
-    // Als hetzelfde proces, gewoon return (geen switch nodig) anders super veel bugs
-    if (nextproc == oldproc) {
-        return;
-    }
-    
-    // Update currproc
-    currproc = nextproc;
-    currproc->pstate = RUNNING;
-    
-    // Context switch
-    switch_proc(&oldproc->psp, &nextproc->psp);
-}
-
 void k_sleep(uint32_t ms) {
-    const uint32_t FACTOR = 200000;
+    const uint32_t FACTOR = 200000;//0.5 sec op mijn laptop maar dat vind ik juist lekker snell
     const uint32_t MAX_MS = 0xffffffff / FACTOR;
     
     if (ms > MAX_MS) {
@@ -177,7 +31,7 @@ void k_sleep(uint32_t ms) {
     }
 }
 
-void k_sp(void){
+void k_sp(void){//print de pcb status
     k_printf("\n====active pcb's====\n");
     for (uint32_t i = 0; i < MAXPROCS; i++){
         if(proclist[i].pstate == NOPROC){
@@ -191,23 +45,6 @@ void k_sp(void){
     }
     k_printf("\n====end of active pcb's====\n");
 }
-
-#define start(id)do{\
-    proclist[id].pstate = start;\
-    k_printf("started proces id: %d\n", id);\
-}while(0);
-
-#define block()do{\
-    currproc->pstate = NOPROC;\
-    k_printf("blocked proces id:  %d\n", currproc->pid);\
-    yield();\
-}while(0);
-
-#define kill()do{\
-    currproc->pstate = NOPROC;\
-    k_printf("killed proces id:  %d\n", currproc->pid);\
-    yield();\
-}while(0);
 
 // === gefixde TEST PROCESSEN ;)===
 /*void proc0(void) {
@@ -249,15 +86,14 @@ void proc1(void) {
     currproc->pstate = BLOCKED;
 }
 
-// === KERNEL_MAIN ===
 void kernel_main(void) {
-    kernel_boot();
+    kernel_boot();//functie zodat ik niet perongeluk wat sloop
     
-    // Spawn idle proces (PID 0) met NULL entrypoint
+    // Spawn idle proces (PID 0) met NULL entrypoint om terueg te keren naar kernel
     idleproc = spawn_proc((uint32_t)NULL);
     currproc = idleproc;
     
-    // Spawn user processen
+    // Spawn user de sander user processen
     spawn_proc((uint32_t)proc0);
     spawn_proc((uint32_t)proc1);
     

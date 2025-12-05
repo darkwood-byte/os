@@ -1,11 +1,7 @@
 #ifndef MAIN_H
 #define MAIN_H
 
-//data types
-#include "types.h"
-
-//debug
-#include "print_k.h"
+//deps
 #include "deps.h"
 
 //utils
@@ -13,12 +9,14 @@
 
 //CSR access and trap
 #include "csr.h"
+
 #include "trap_k.h"
 
 //Memory management
 #include "memory.h"
 
 //proces mangement
-#include "pcb.h"
+#include "pcb_k.h"
+#include "program_k.h"
 
 #endif
