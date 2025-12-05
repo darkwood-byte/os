@@ -37,21 +37,20 @@ pcb proclist[MAXPROCS];
 pcb *find_free_pcb(void){
     for(uint32_t i = 0; i < MAXPROCS; i++){
         if(proclist[i].pstate == NOPROC){
-            proclist[i].pstate = READY;
             return &proclist[i];
         }
     }
     k_panic("no free PCB found due to max proces count, proces id: %d", MAXPROCS);
 }
 
-pcb *spawn_proc(uint32_t entrypoint){
-    pcb *p = find_free_pcb();
+pcb *spawn_proc(uint32_t entrypoint){//P.C.B procces controll block, bevat simple proces info voor de os.
+    pcb *p = find_free_pcb();//find een plekje
     if(!p) return NULL;
 
-    /* 1) Zorg dat stack eerst nul is (niet strikt noodzakelijk, maar helpt bij debugging) */
+    //haal de stack leeg, wel zo netjes
     memset(p->pstack, 0, sizeof(p->pstack));
 
-    /* 2) p->pid is al gezet door find_free_pcb; zet pstate op READY */
+    //activeer het proces
     p->pstate = READY;
 
     /* 3) Bepaal top van pstack: we willen psp wijzen naar het laatst gepushte 32-bit woord.
@@ -59,22 +58,22 @@ pcb *spawn_proc(uint32_t entrypoint){
     uintptr_t stack_base = (uintptr_t)&p->pstack[0];
     uintptr_t stack_top  = stack_base + sizeof(p->pstack); /* adres nét boven laatste byte */
 
-    /* Zorg alignment: sp moet 4-byte aligned (althans voor 32-bit pushes) */
+    //zorg dat alles op 4bytes loopt
     uint32_t *sp = (uint32_t*) (stack_top);
-    /* Als stack_top niet 4-aligned is, corrigeer */
+    // zo niet, corrigeer 
     if (((uintptr_t)sp & 0x3) != 0) {
         sp = (uint32_t*)(((uintptr_t)sp) & ~(uint32_t) 0x3);
     }
 
     for (int i = 0; i < 12; i++) {
-        sp--;      /* stack groeit naar lagere adressen */
-        *sp = 0;   /* init alle register plaatsen met 0 */
+        sp--;      //stack groeit naar lagere adressen 
+        *sp = 0;   // init alle register plaatsen met 0 mogelijk niet nodig door de memset
     }
 
     sp--;
-    *sp = (uint32_t)entrypoint;
+    *sp = (uint32_t)entrypoint;//zet de enetery point erin.
 
-    p->psp = (uint32_t)(uintptr_t)sp;
+    p->psp = (uint32_t)(uintptr_t)sp;//geef de stackpointer aan de pcb
 
     return p;
 }
@@ -98,11 +97,18 @@ void k_sp(void){
     k_printf("\n====end of active pcb's====\n");
 }
 
+void test1(void){
+
+}
+
+void test2(void){
+
+}
+
 void kernel_main(void) {
     kernel_boot();
-    spawn_proc(0);
-    spawn_proc(0);
-    spawn_proc(0);
+    spawn_proc((uint32_t)test1);
+    spawn_proc((uint32_t)test2);
     k_sp();
     k_printf("sizeof pcb_list: %d\n\n", sizeof(proclist));
     proces_handler();
