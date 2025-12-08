@@ -14,7 +14,7 @@ void yield(void) ;
 }while(0);
 
 #define block()do{\
-    currproc->pstate = NOPROC;\
+    currproc->pstate = BLOCKED;\
     k_printf("blocked proces id:  %d\n", currproc->pid);\
     yield();\
 }while(0);

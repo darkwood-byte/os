@@ -69,23 +69,24 @@ void proc1(void) {
 
 void proc0(void) {
     k_printf("\nStart van PID %d\n", currproc->pid);
-    for (int i = 0; i < 4; i++) {
-        k_printf("%d", currproc->pid);
+    for (int i = 0; i < 10; i++) {
+        k_sp();
         yield();
-        k_sleep(1000);
+        //k_sleep(1000);
     }
 currproc->pstate = BLOCKED;
 }
 void proc1(void) {
-    k_printf("\nStart van PID %d\n",currproc->pid);
-    for (int i = 0; i < 8; i++) {
-        k_printf("%d", currproc->pid);
+    while(1){
         yield();
-        k_sleep(1000);
+        k_printf("test2\n");
     }
-    currproc->pstate = BLOCKED;
+    
 }
 
+void test(void){
+     k_printf("\nStart van PID %d\n",currproc->pid);
+}
 void kernel_main(void) {
     kernel_boot();//functie zodat ik niet perongeluk wat sloop
     
@@ -94,9 +95,8 @@ void kernel_main(void) {
     currproc = idleproc;
     
     // Spawn user de sander user processen
-    spawn_proc((uint32_t)proc0);
+    spawn_proc((uint32_t)test);
     spawn_proc((uint32_t)proc1);
-    
     k_sp();
     k_printf("sizeof pcb_list: %d\n\n", sizeof(proclist));
     
