@@ -4,9 +4,6 @@
 #include "types.h"
 #include "pte.h"
 
-//debug
-#define debug_pte()do{k_printf("VPA: %x PFA: %x VPN1: %x VPN2: %x", );}while(0)
-
 // Helper macros voor VPN extractie volgens Sv32
 #define VPN1_FROM_VPA(vpa) ((vpa) >> 22)              // Bits 31:22
 #define VPN0_FROM_VPA(vpa) (((vpa) >> 12) & 0x3FF)    // Bits 21:12

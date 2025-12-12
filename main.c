@@ -81,7 +81,7 @@ void voorbeeld() {
      addr = 0x80200001;
     
     // Of met macro:
-   k_printf("add_ptbl: VPA=0x%x PFA=0x%x (vpa aligned: %s, pfa aligned: %s)\n",vpa, pfa, IS_PAGE_ALIGNED(vpa) ? "yes" : "no", IS_PAGE_ALIGNED(pfa) ? "yes" : "no");
+ 
     
     // PTE maken:
     uint32_t ppn = 0x80200;  // Voorbeeld PPN
@@ -93,8 +93,8 @@ void voorbeeld() {
     // Map kernel geheugen
     for (uint32_t pfa = (uint32_t)__kernel_base, vpa = 0; pfa < (uint32_t)__free_ram_start; pfa += PAGEFRAMESIZE, vpa += PAGEFRAMESIZE) {
         add_ptbl_entry(pdbr, vpa, pfa, PTE_FLG_R | PTE_FLG_W | PTE_FLG_X);
+        k_printf("add_ptbl: VPA=0x%x PFA=0x%x (vpa aligned: %s, pfa aligned: %s)\n",vpa, pfa, IS_PAGE_ALIGNED(vpa) ? "yes" : "no", IS_PAGE_ALIGNED(pfa) ? "yes" : "no");
     }
-    debug_pte();
     // Wijs toe aan PCB
     spawn_proc((uint32_t)proc0)->pdbr = pdbr;
 }
