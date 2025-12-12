@@ -2,6 +2,7 @@
 
 extern char __bss[], __bss_end[], __stack_top[];
 extern char __free_ram_start[], __free_ram_end[];
+extern char __kernel_base[];
 
 void kernel_boot(void){
     k_printf("\nBoot done. . .\n");
@@ -47,7 +48,7 @@ void k_sp(void){//print de pcb status
 }
 
 // === gefixde TEST PROCESSEN ;)===
-/*void proc0(void) {
+void proc0(void) {
     k_printf("\nStart van proc0 op PID: %d\n", currproc->pid);
      for (uint8_t i = 0; i < 8; i++){
         k_printf("currently in loop %d from proc0 hosted on PID: %d\n", i, currproc->pid);
@@ -65,28 +66,39 @@ void proc1(void) {
         k_sleep(1000);
     }
     kill();
-}*/
-
-void proc0(void) {
-    k_printf("\nStart van PID %d\n", currproc->pid);
-    for (int i = 0; i < 10; i++) {
-        k_sp();
-        yield();
-        //k_sleep(1000);
-    }
-currproc->pstate = BLOCKED;
 }
-void proc1(void) {
-    while(1){
-        yield();
-        k_printf("test2\n");
-    }
+
+void voorbeeld() {
+    uint32_t addr = 0x80200000;
     
+    // Of met macro:
+    if (IS_PAGE_ALIGNED(addr)) {
+        k_printf("yes\n");
+        // Adres is page-aligned
+    }
+    else k_printf("no\n");
+
+     addr = 0x80200001;
+    
+    // Of met macro:
+ 
+    
+    // PTE maken:
+    uint32_t ppn = 0x80200;  // Voorbeeld PPN
+    uint32_t pte = (ppn << 10) | PTE_FLG_V | PTE_FLG_R | PTE_FLG_W | PTE_FLG_X;
+
+    // Maak een pageframe voor Page Directory
+    uint32_t *pdbr = (uint32_t *)pageframalloc(1);
+
+    // Map kernel geheugen
+    for (uint32_t pfa = (uint32_t)__kernel_base, vpa = 0; pfa < (uint32_t)__free_ram_start; pfa += PAGEFRAMESIZE, vpa += PAGEFRAMESIZE) {
+        add_ptbl_entry(pdbr, vpa, pfa, PTE_FLG_R | PTE_FLG_W | PTE_FLG_X);
+        k_printf("add_ptbl: VPA=0x%x PFA=0x%x (vpa aligned: %s, pfa aligned: %s)\n",vpa, pfa, IS_PAGE_ALIGNED(vpa) ? "yes" : "no", IS_PAGE_ALIGNED(pfa) ? "yes" : "no");
+    }
+    // Wijs toe aan PCB
+    spawn_proc((uint32_t)proc0)->pdbr = pdbr;
 }
 
-void test(void){
-     k_printf("\nStart van PID %d\n",currproc->pid);
-}
 void kernel_main(void) {
     kernel_boot();//functie zodat ik niet perongeluk wat sloop
     
@@ -94,8 +106,9 @@ void kernel_main(void) {
     idleproc = spawn_proc((uint32_t)NULL);
     currproc = idleproc;
     
+    voorbeeld();
     // Spawn user de sander user processen
-    spawn_proc((uint32_t)test);
+    
     spawn_proc((uint32_t)proc1);
     k_sp();
     k_printf("sizeof pcb_list: %d\n\n", sizeof(proclist));
