@@ -84,19 +84,24 @@ void yield(void) {
     
     // Als hetzelfde proces, gewoon return (geen switch nodig) anders super veel bugs
     if (nextproc == oldproc) {
-        return;
+            return;
     }
-    
     // Update currproc
     currproc = nextproc;
     currproc->pstate = RUNNING;
-    //smijd de cash leeg
+
+    // Flush TLB en set SATP met nieuwe PDBR
+    uint32_t pdbr_value = (uint32_t)(uintptr_t)nextproc->pdbr;
+    uint32_t ppn = (pdbr_value >> 12) & 0x003FFFFF;  // Extract PPN (bits 21:0)
+    uint32_t satp_value = SV32_MMU_ON | ppn;          // MODE=1 + PPN
+
     __asm__ __volatile__(
         "csrw satp, %0\n"
         "sfence.vma\n"
         :
-        : "r" ((SV32_MMU_ON << 31) | (((uint32_t)nextproc->pdbr >> 12) & 0x003FFFFF))
+        : "r" (satp_value)
     );
+
     // Context switch
     switch_proc(&oldproc->psp, &nextproc->psp);
 }

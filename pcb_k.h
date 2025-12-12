@@ -3,6 +3,8 @@
 
 #include "types.h"
 #include "deps.h"
+#include "trap_frame_k.h"//voor pageframe size
+#include "memory.h"
 
 #define MAXPROCS 4
 

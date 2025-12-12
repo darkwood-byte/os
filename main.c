@@ -15,17 +15,11 @@ void kernel_boot(void){
     k_printf("Trap handler registered at: %p\n", (uint32_t)switch_trap);
     k_printf("Free RAM: %p - %p\n", (uint32_t)__free_ram_start, (uint32_t)__free_ram_end);
     
-    k_printf("\nMaking kernel program pcb:\n\n");
-     idleproc = spawn_proc((uint32_t)NULL);
+    k_printf("\nMaking kernel idle process pcb:\n\n");
+    idleproc = spawn_proc((uint32_t)NULL);
     currproc = idleproc;
-    currproc->pdbr = (uint32_t *)pageframalloc(1);
-    k_printf("Mapping kernel memory:\n\n");
-     for (uint32_t pfa = (uint32_t)__kernel_base, vpa = 0; pfa < (uint32_t)__free_ram_start; pfa += PAGEFRAMESIZE, vpa += PAGEFRAMESIZE) {
-        add_ptbl_entry(currproc->pdbr, vpa, pfa, PTE_FLG_R | PTE_FLG_W | PTE_FLG_X);
-        k_printf("add_ptbl: VPA=0x%x PFA=0x%x (vpa aligned: %s, pfa aligned: %s)\n",vpa, pfa, IS_PAGE_ALIGNED(vpa) ? "yes" : "no", IS_PAGE_ALIGNED(pfa) ? "yes" : "no");
-    }
-     k_printf("\nKernel Boot done. . .\n");
     
+    k_printf("\nKernel Boot done. . .\n");
 }
 
 void k_sleep(uint32_t ms) {
@@ -79,16 +73,48 @@ void proc1(void) {
 }
 
 void kernel_main(void) {
-    kernel_boot();//functie zodat ik niet perongeluk wat sloop
+    // EERST: Initialiseer alles met MMU UIT
+    kernel_boot();
     
-    spawn_proc((uint32_t)proc0);
-     spawn_proc((uint32_t)proc1);
+    k_printf("\n=== Creating user processes ===\n");
+    
+    // Maak user processen (met MMU nog UIT)
+    pcb *p0 = spawn_proc((uint32_t)proc0);
+    pcb *p1 = spawn_proc((uint32_t)proc1);
+    
+    if (!p0 || !p1) {
+        k_panic("Failed to spawn processes", "");
+    }
+    
     k_sp();
     k_printf("sizeof pcb_list: %d\n\n", sizeof(proclist));
     
+    // NU: Schakel MMU in
+    k_printf("\n=== Enabling MMU ===\n");
+    
+    uint32_t pdbr_value = (uint32_t)(uintptr_t)currproc->pdbr;
+    uint32_t ppn = (pdbr_value >> 12) & 0x003FFFFF;
+    uint32_t satp_value = SV32_MMU_ON | ppn;
+    
+    k_printf("  pdbr=%x\n", pdbr_value);
+    k_printf("  ppn=%x\n", ppn);
+    k_printf("  SATP= %x\n", satp_value);
+    
+    __asm__ __volatile__(
+        "csrw satp, %0\n"
+        "sfence.vma\n"
+        :
+        : "r" (satp_value)
+        : "memory"
+    );
+    
+    k_printf("MMU enabled. Starting scheduler...\n");
+    
+    // Start scheduler
     yield();
     
-    k_panic("\nboot-up succeeded, now back in PID 0 (idlin forava')...\n", "");;
+    // Should not reach here
+    k_panic("Returned to kernel_main after yield!", "");
 }
 
 __attribute__((section(".text.boot")))
