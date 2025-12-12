@@ -4,9 +4,10 @@
 #include "types.h"
 #include "mem.h"
 #include "panic_k.h"
-#include "trap_frame_k.h"
 #include "pte.h"
+#include "trap_frame_k.h"
 
+#define PAGEFRAMESIZE 4096U
 
 #define IS_PAGE_ALIGNED(addr) (((addr) & (PAGEFRAMESIZE - 1)) == 0)
 

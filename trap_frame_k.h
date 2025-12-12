@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-#define PAGEFRAMESIZE 4096U
+
 
 typedef uint32_t pframe_addr_t;
 

@@ -90,7 +90,7 @@ void yield(void) {
     currproc = nextproc;
     currproc->pstate = RUNNING;
 
-    // Flush TLB en set SATP met nieuwe PDBR
+    // Flush TLB en set SATP met nieuwe PDBR 
     uint32_t pdbr_value = (uint32_t)(uintptr_t)nextproc->pdbr;
     uint32_t ppn = (pdbr_value >> 12) & 0x003FFFFF;  // Extract PPN (bits 21:0)
     uint32_t satp_value = SV32_MMU_ON | ppn;          // MODE=1 + PPN
