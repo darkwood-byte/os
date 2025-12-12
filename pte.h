@@ -5,7 +5,7 @@
 #include "pte_utils.h"
 
 // SATP register flags
-#define SV32_MMU_ON (1 << 31)  // MODE=1 voor Sv32 (bit 31)
+#define SV32_MMU_ON (1U << 31)  // MODE=1 voor Sv32 (bit 31)
 
 // Page Table Entry flags (bits 9:0)
 #define PTE_FLG_V (1 << 0)  // Valid

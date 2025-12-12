@@ -90,7 +90,13 @@ void yield(void) {
     // Update currproc
     currproc = nextproc;
     currproc->pstate = RUNNING;
-    
+    //smijd de cash leeg
+    __asm__ __volatile__(
+        "csrw satp, %0\n"
+        "sfence.vma\n"
+        :
+        : "r" ((SV32_MMU_ON << 31) | (((uint32_t)nextproc->pdbr >> 12) & 0x003FFFFF))
+    );
     // Context switch
     switch_proc(&oldproc->psp, &nextproc->psp);
 }
