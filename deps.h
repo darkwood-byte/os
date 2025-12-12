@@ -15,5 +15,6 @@
 
 //types
 #include "types.h"
+#include "pte.h"
 
 #endif
