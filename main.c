@@ -14,6 +14,16 @@ void kernel_boot(void){
     k_printf("BSS initialized\n");
     k_printf("Trap handler registered at: %p\n", (uint32_t)switch_trap);
     k_printf("Free RAM: %p - %p\n", (uint32_t)__free_ram_start, (uint32_t)__free_ram_end);
+    
+    k_printf("\nMaking kernel program pcb:\n\n");
+     idleproc = spawn_proc((uint32_t)NULL);
+    currproc = idleproc;
+    currproc->pdbr = (uint32_t *)pageframalloc(1);
+    k_printf("Mapping kernel memory:\n\n");
+     for (uint32_t pfa = (uint32_t)__kernel_base, vpa = 0; pfa < (uint32_t)__free_ram_start; pfa += PAGEFRAMESIZE, vpa += PAGEFRAMESIZE) {
+        add_ptbl_entry(currproc->pdbr, vpa, pfa, PTE_FLG_R | PTE_FLG_W | PTE_FLG_X);
+        k_printf("add_ptbl: VPA=0x%x PFA=0x%x (vpa aligned: %s, pfa aligned: %s)\n",vpa, pfa, IS_PAGE_ALIGNED(vpa) ? "yes" : "no", IS_PAGE_ALIGNED(pfa) ? "yes" : "no");
+    }
      k_printf("\nKernel Boot done. . .\n");
     
 }
@@ -68,48 +78,11 @@ void proc1(void) {
     kill();
 }
 
-void voorbeeld() {
-    uint32_t addr = 0x80200000;
-    
-    // Of met macro:
-    if (IS_PAGE_ALIGNED(addr)) {
-        k_printf("yes\n");
-        // Adres is page-aligned
-    }
-    else k_printf("no\n");
-
-     addr = 0x80200001;
-    
-    // Of met macro:
- 
-    
-    // PTE maken:
-    uint32_t ppn = 0x80200;  // Voorbeeld PPN
-    uint32_t pte = (ppn << 10) | PTE_FLG_V | PTE_FLG_R | PTE_FLG_W | PTE_FLG_X;
-
-    // Maak een pageframe voor Page Directory
-    uint32_t *pdbr = (uint32_t *)pageframalloc(1);
-
-    // Map kernel geheugen
-    for (uint32_t pfa = (uint32_t)__kernel_base, vpa = 0; pfa < (uint32_t)__free_ram_start; pfa += PAGEFRAMESIZE, vpa += PAGEFRAMESIZE) {
-        add_ptbl_entry(pdbr, vpa, pfa, PTE_FLG_R | PTE_FLG_W | PTE_FLG_X);
-        k_printf("add_ptbl: VPA=0x%x PFA=0x%x (vpa aligned: %s, pfa aligned: %s)\n",vpa, pfa, IS_PAGE_ALIGNED(vpa) ? "yes" : "no", IS_PAGE_ALIGNED(pfa) ? "yes" : "no");
-    }
-    // Wijs toe aan PCB
-    spawn_proc((uint32_t)proc0)->pdbr = pdbr;
-}
-
 void kernel_main(void) {
     kernel_boot();//functie zodat ik niet perongeluk wat sloop
     
-    // Spawn idle proces (PID 0) met NULL entrypoint om terueg te keren naar kernel
-    idleproc = spawn_proc((uint32_t)NULL);
-    currproc = idleproc;
-    
-    voorbeeld();
-    // Spawn user de sander user processen
-    
-    spawn_proc((uint32_t)proc1);
+    spawn_proc((uint32_t)proc0);
+     spawn_proc((uint32_t)proc1);
     k_sp();
     k_printf("sizeof pcb_list: %d\n\n", sizeof(proclist));
     

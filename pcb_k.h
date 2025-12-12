@@ -17,6 +17,7 @@ typedef struct {
     uint32_t pid;
     procstate pstate;
     uint32_t psp;
+    uint32_t *pdbr; // <=== Process 'page directory base register'
     uint8_t pstack[1024];
 } pcb;
 
