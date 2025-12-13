@@ -16,8 +16,4 @@
 #define PTE_FLG_A (1 << 6)  // Accessed
 #define PTE_FLG_D (1 << 7)  // Dirty
 
-// Reserved for Software bits (bits 9:8) - kunnen voor OS-doeleinden gebruikt worden volgens het internet
-#define PTE_FLG_RSW0 (0 << 8)  // Standaard 0
-#define PTE_FLG_RSW1 (0 << 9)  // Standaard 0
-
 #endif // PTE_H

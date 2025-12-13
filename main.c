@@ -104,13 +104,10 @@ void kernel_main(void) {
     
     k_sp();
     k_printf("sizeof pcb_list: %d\n\n", sizeof(proclist));
-    
     MNU_init();//start de mnu voordat de procesor begint 
-    spawn_proc((uint32_t)proc1);
     yield();
     
-    // Should not reach here
-    k_panic("Returned to kernel_main after yield!", "");
+    k_panic("Returned to kernel_main after yield!, now idling foreva jipeeeee . . .", "");
 }
 
 __attribute__((section(".text.boot")))
