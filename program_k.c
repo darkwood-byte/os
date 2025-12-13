@@ -45,6 +45,19 @@ void switch_proc(uint32_t *current_psp, uint32_t *next_psp) {
     );
 }
 
+void Flush_TLB(pcb* nextproc){
+    uint32_t pdbr_value = (uint32_t)(uintptr_t)nextproc->pdbr;
+    uint32_t ppn = (pdbr_value >> 12) & 0x003FFFFF;  // Extract PPN (bits 21:0)
+    uint32_t satp_value = SV32_MMU_ON | ppn;          // MODE=1 + PPN
+
+    __asm__ __volatile__(
+        "csrw satp, %0\n"
+        "sfence.vma\n"
+        :
+        : "r" (satp_value)
+    );
+}
+
 void yield(void) {
     // Save old currproc voor switch_proc
     pcb *oldproc = currproc;
@@ -82,7 +95,7 @@ void yield(void) {
         nextproc = idleproc;
     }
     
-    // Als hetzelfde proces, gewoon return (geen switch nodig) anders super veel bugs
+    // Als hetzelfde proces geen switch nodig anders super veel bugs
     if (nextproc == oldproc) {
             return;
     }
@@ -91,16 +104,7 @@ void yield(void) {
     currproc->pstate = RUNNING;
 
     // Flush TLB en set SATP met nieuwe PDBR 
-    uint32_t pdbr_value = (uint32_t)(uintptr_t)nextproc->pdbr;
-    uint32_t ppn = (pdbr_value >> 12) & 0x003FFFFF;  // Extract PPN (bits 21:0)
-    uint32_t satp_value = SV32_MMU_ON | ppn;          // MODE=1 + PPN
-
-    __asm__ __volatile__(
-        "csrw satp, %0\n"
-        "sfence.vma\n"
-        :
-        : "r" (satp_value)
-    );
+    Flush_TLB(nextproc);
 
     // Context switch
     switch_proc(&oldproc->psp, &nextproc->psp);
