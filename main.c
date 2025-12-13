@@ -4,15 +4,17 @@ extern char __bss[], __bss_end[], __stack_top[];
 extern char __free_ram_start[], __free_ram_end[];
 extern char __kernel_base[];
 
-void kernel_boot(void){
+void kernel_bootstrap(void){
     k_printf("\nBoot done. . .\n");
+
+     k_printf("\n=== Kernel Boot ===\n");
     memset(__bss, 0, ((size_t)__bss_end - (size_t)__bss));
-    write_csr(stvec, (uint32_t)switch_trap);
-    init_memory();
-    
-    k_printf("\n=== Kernel Boot ===\n");
     k_printf("BSS initialized\n");
+    
+    write_csr(stvec, (uint32_t)switch_trap);
     k_printf("Trap handler registered at: %p\n", (uint32_t)switch_trap);
+
+    init_memory();
     k_printf("Free RAM: %p - %p\n", (uint32_t)__free_ram_start, (uint32_t)__free_ram_end);
     
     k_printf("\nMaking kernel idle process pcb:\n\n");
@@ -72,25 +74,8 @@ void proc1(void) {
     kill();
 }
 
-void kernel_main(void) {
-    // EERST: Initialiseer alles met MMU UIT
-    kernel_boot();
-    
-    k_printf("\n=== Creating user processes ===\n");
-    
-    // Maak user processen (met MMU nog UIT)
-    pcb *p0 = spawn_proc((uint32_t)proc0);
-    pcb *p1 = spawn_proc((uint32_t)proc1);
-    
-    if (!p0 || !p1) {
-        k_panic("Failed to spawn processes", "");
-    }
-    
-    k_sp();
-    k_printf("sizeof pcb_list: %d\n\n", sizeof(proclist));
-    
-    // NU: Schakel MMU in
-    k_printf("\n=== Enabling MMU ===\n");
+void MNU_init(void){
+        k_printf("\n=== Enabling MMU ===\n");
     
     uint32_t pdbr_value = (uint32_t)(uintptr_t)currproc->pdbr;
     uint32_t ppn = (pdbr_value >> 12) & 0x003FFFFF;
@@ -99,18 +84,29 @@ void kernel_main(void) {
     k_printf("  pdbr=%x\n", pdbr_value);
     k_printf("  ppn=%x\n", ppn);
     k_printf("  SATP= %x\n", satp_value);
-    
-    __asm__ __volatile__(
+        __asm__ __volatile__(
         "csrw satp, %0\n"
         "sfence.vma\n"
         :
         : "r" (satp_value)
         : "memory"
     );
+    k_printf("MNU is now online");
+}
+
+void kernel_main(void) {
+    kernel_bootstrap();
     
-    k_printf("MMU enabled. Starting scheduler...\n");
+    k_printf("\n=== Creating test user processes ===\n");
     
-    // Start scheduler
+    spawn_proc((uint32_t)proc0);
+    spawn_proc((uint32_t)proc1);
+    
+    k_sp();
+    k_printf("sizeof pcb_list: %d\n\n", sizeof(proclist));
+    
+    MNU_init();//start de mnu voordat de procesor begint 
+    spawn_proc((uint32_t)proc1);
     yield();
     
     // Should not reach here
