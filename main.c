@@ -91,7 +91,7 @@ void MNU_init(void){
         : "r" (satp_value)
         : "memory"
     );
-    k_printf("MNU is now online");
+    k_printf("\n===MNU is now online===\n");
 }
 
 void kernel_main(void) {
@@ -104,7 +104,8 @@ void kernel_main(void) {
     
     k_sp();
     k_printf("sizeof pcb_list: %d\n\n", sizeof(proclist));
-    MNU_init();//start de mnu voordat de procesor begint 
+    MNU_init();//start de mnu voordat de sheduler begint 
+    k_printf("Round-robin cooperative scheduler is now starting:\n\n");
     yield();
     
     k_panic("Returned to kernel_main after yield!, now idling foreva jipeeeee . . .", "");

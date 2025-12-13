@@ -103,7 +103,7 @@ void yield(void) {
     currproc = nextproc;
     currproc->pstate = RUNNING;
 
-    // Flush TLB en set SATP met nieuwe PDBR 
+    // Flush TLB en set SATPset met nieuwe PDBR 
     Flush_TLB(nextproc);
 
     // Context switch
