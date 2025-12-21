@@ -40,5 +40,40 @@ sbiret sbi_call(uint32_t arg0, uint32_t arg1, uint32_t arg2,
     return ret;
 }
 
+void k_putchar(char ch) {
+    sbi_call(ch, 0, 0, 0, 0, 0, 0, 0x01, ch);
+}
+
+char k_readchar(void)
+{
+    int ch;
+
+    __asm__ __volatile__(
+        "li a7, 2\n"      // SBI: console_getchar
+        "ecall\n"
+        "mv %0, a0\n"     
+        : "=r"(ch)
+        :
+        : "a0", "a7", "memory"
+    );
+    
+    // SBI fail
+    if (ch < 0)
+        return 0;
+
+    if (ch == 4)
+    {
+        k_printf("\n------------------------\nGoodbye =]\n\n");
+        __asm__ __volatile__(
+            "li a7, 8\n"  // SBI shutdown
+            "ecall\n"
+            :
+            :
+            : "a7", "memory"
+        );
+        k_panic("\nSBI shutdown failed, check hardware....\n", "");
+    }
+    return (char)ch;
+}
 
 #endif

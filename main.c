@@ -96,6 +96,11 @@ void MNU_init(void){
 
 void kernel_main(void) {
     kernel_bootstrap();
+    char c = (char)0;
+    while(1){
+        c = k_readchar();
+        if(c)k_putchar(c);
+    }
     
     k_printf("\n=== Creating test user processes ===\n");
     

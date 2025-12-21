@@ -3,10 +3,6 @@
 
 #include "print_k.h"
 
-static void putchar(char ch) {
-    sbi_call(ch, 0, 0, 0, 0, 0, 0, 0x01, ch);
-}
-
 void k_printf(const char *fmt, ...) {
     va_list_rv args;
     va_start_rv(args, fmt);
@@ -16,7 +12,7 @@ void k_printf(const char *fmt, ...) {
 
     while (*p) {
         if (*p != '%') {
-            putchar(*p++);
+            k_putchar(*p++);
             continue;
         }
 
@@ -27,34 +23,34 @@ void k_printf(const char *fmt, ...) {
             int32_t val = va_arg_rv(args, int32_t);
             itoa(val, buf, 10);
             for (char *s = buf; *s; s++)
-                putchar(*s);
+                k_putchar(*s);
             break;
         }
         case 'u': {
             uint32_t val = va_arg_rv(args, uint32_t);
             utoa(val, buf, 10);
             for (char *s = buf; *s; s++)
-                putchar(*s);
+                k_putchar(*s);
             break;
         }
 
         case 'x': {
             uint32_t val = va_arg_rv(args, uint32_t);
-            putchar('0');
-            putchar('x');
+            k_putchar('0');
+            k_putchar('x');
             utoa(val, buf, 16);
             for (char *s = buf; *s; s++)
-                putchar(*s);
+                k_putchar(*s);
             break;
         }
 
         case 'p': {
-            putchar('0');
-            putchar('x');
+            k_putchar('0');
+            k_putchar('x');
             uint32_t val = va_arg_rv(args, uint32_t);
             utoa(val, buf, 16);
             for (char *s = buf; *s; s++)
-                putchar(*s);
+                k_putchar(*s);
             break;
         }
 
@@ -62,24 +58,24 @@ void k_printf(const char *fmt, ...) {
             char *str = va_arg_rv(args, char*);
             if (!str) str = "(null)";
             for (; *str; str++)
-                putchar(*str);
+                k_putchar(*str);
             break;
         }
 
         case 'c': {
             char c = (char)va_arg_rv(args, int);
-            putchar(c);
+            k_putchar(c);
             break;
         }
 
         case '%': {
-            putchar('%');
+            k_putchar('%');
             break;
         }
 
         default: {
-            putchar('%');
-            putchar(*p);
+            k_putchar('%');
+            k_putchar(*p);
             break;
         }
         }
