@@ -9,7 +9,7 @@ pcb *idleproc = NULL;
 
 
 
-pcb *spawn_proc(uint32_t entrypoint) {
+pcb *spawn_proc(uint32_t entrypoint, uint32_t size) {
     pcb *p = NULL;
     
     // Zoek een mooie vrije plek

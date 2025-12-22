@@ -18,7 +18,7 @@ void kernel_bootstrap(void){
     k_printf("Free RAM: %p - %p\n", (uint32_t)__free_ram_start, (uint32_t)__free_ram_end);
     
     k_printf("\nMaking kernel idle process pcb:\n\n");
-    idleproc = spawn_proc((uint32_t)NULL);
+    idleproc = spawn_proc((uint32_t)NULL, (uint32_t)NULL);//kernel proc
     currproc = idleproc;
     
     k_printf("\nKernel Boot done. . .\n");
@@ -100,9 +100,12 @@ extern char _binary_build_main_bin_size[];
 void kernel_main(void) {
     kernel_bootstrap();
     
+    
     k_printf("binary start: %p\n", (uint32_t)_binary_build_main_bin_start);
      k_printf("binary size: %p\n", (uint32_t)_binary_build_main_bin_size);
-    
+
+    spawn_proc((uint32_t)_binary_build_main_bin_start, (uint32_t)_binary_build_main_bin_size);
+
     k_panic("Kernel end!...\n", "");
 }
 
