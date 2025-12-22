@@ -59,10 +59,6 @@ void Flush_TLB(pcb* nextproc){
 }
 
 void yield(void) {
-    // Save old currproc voor switch_proc
-    k_printf("DEBUG: Entering yield()\n");
-    k_printf("  currproc PID = %d\n", currproc ? currproc->pid : -1);
-    
     pcb *oldproc = currproc;
     
     // Update state van huidig proces
@@ -103,11 +99,6 @@ void yield(void) {
         return;
     }
     
-    // DEBUG: Print belangrijke informatie
-    k_printf("  Switching from PID %d to PID %d\n", 
-             oldproc ? oldproc->pid : -1, nextproc->pid);
-    
-    k_printf("  oldproc->psp = ");
     if (oldproc && oldproc->psp) {
         k_printf("%x\n", oldproc->psp);
     } else {
