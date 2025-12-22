@@ -13,7 +13,7 @@ void handle_trap(trap_frame *tf) {
     //skip the broken instruction
     csr_sepc += 4;
     write_csr(sepc, csr_sepc);
-    
+    k_panic("debug\n","");
     (void)tf; // Suppress unused parameter warning for now hehehehehehe
 }
 
@@ -21,26 +21,37 @@ __attribute__((naked))
 __attribute__((aligned(4)))
 void switch_trap(void) {
     __asm__ __volatile__(
-        // save the sp to sscratch temp register
-        "csrw sscratch, sp\n"
+        // ===============================
+        // VERVANG het oude: "csrw sscratch, sp\n"
+        // MET het nieuwe: wissel sp en sscratch (volgens lesdoc p15-16)
+        "csrrw sp, sscratch, sp\n"
+        // ===============================
         
-        //Reserve 124 bytes  (31 * 4 = 124)
+        // Reserveer 124 bytes (31 * 4 = 124)
         "addi sp, sp, -124\n"
         
-       STORE_REGS()
+        STORE_REGS()
         
-        "csrr a0, sscratch\n" // put the old sp back for handle trap function
-        "sw a0, 4(sp)\n"      
-        //call the handle function with the stack pointer as argument to lead to the struct.
+        // Lees de oude sp (nu in sscratch) en sla die op
+        "csrr a0, sscratch\n"
+        "sw a0, 124(sp)\n"
+        
+        // ===============================
+        // NIEUW: Reset sscratch naar kernel stack top (volgens lesdoc p16)
+        "addi a0, sp, 128\n"  // 124 + 4 = 128 (begin van de stack frame)
+        "csrw sscratch, a0\n"
+        // ===============================
+        
+        // Roep handle_trap aan met stack pointer als argument
         "mv a0, sp\n"         // First argument: trap_frame *tf
         "call handle_trap\n"
         
         RESTORE_REGS()
         
-        // Restore sp
-        "lw sp, 4(sp)\n"     
+        // Herstel sp
+        "lw sp, 124(sp)\n"
         
-        // return
+        // Keer terug
         "sret\n"
     );
 }

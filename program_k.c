@@ -60,6 +60,9 @@ void Flush_TLB(pcb* nextproc){
 
 void yield(void) {
     // Save old currproc voor switch_proc
+    k_printf("DEBUG: Entering yield()\n");
+    k_printf("  currproc PID = %d\n", currproc ? currproc->pid : -1);
+    
     pcb *oldproc = currproc;
     
     // Update state van huidig proces
@@ -97,15 +100,98 @@ void yield(void) {
     
     // Als hetzelfde proces geen switch nodig anders super veel bugs
     if (nextproc == oldproc) {
-            return;
+        return;
     }
+    
+    // DEBUG: Print belangrijke informatie
+    k_printf("  Switching from PID %d to PID %d\n", 
+             oldproc ? oldproc->pid : -1, nextproc->pid);
+    
+    k_printf("  oldproc->psp = ");
+    if (oldproc && oldproc->psp) {
+        k_printf("%x\n", oldproc->psp);
+    } else {
+        k_printf("NULL\n");
+    }
+    
+    k_printf("  nextproc->psp = ");
+    if (nextproc->psp) {
+        k_printf("%x\n", nextproc->psp);
+        
+        // Dump stack inhoud
+        uint32_t *stack = (uint32_t *)nextproc->psp;
+        k_printf("  Stack dump (first 16 words at psp):\n");
+        for (int i = -8; i < 8; i++) {
+            uint32_t addr = (uint32_t)(&stack[i]);
+            uint32_t value = stack[i];
+            
+            // Print zonder 0x prefix zoals gevraagd
+            k_printf("    [");
+            if (i < 0) {
+                k_printf("-");
+                k_printf("%x", -i*4);
+            } else {
+                k_printf("+");
+                k_printf("%x", i*4);
+            }
+            k_printf("] ");
+            
+            k_printf("%x: ", addr);
+            k_printf("%x", value);
+            
+            // Mark special values
+            if (value == (uint32_t)switch_umode) {
+                k_printf(" <-- switch_umode");
+            } else if (value == (uint32_t)switch_proc) {
+                k_printf(" <-- switch_proc");
+            } else if (value == (uint32_t)yield) {
+                k_printf(" <-- yield");
+            } else if (value == 0) {
+                k_printf(" <-- zero");
+            }
+            k_printf("\n");
+        }
+    } else {
+        k_printf("NULL\n");
+    }
+    
+    k_printf("  switch_umode address = %x\n", (uint32_t)switch_umode);
+    k_printf("  nextproc->pdbr = %x\n", nextproc->pdbr);
+    
+    // NIEUW: Zet kernel stack pointer in sscratch voor nextproc (volgens lesdoc p15)
+    uint32_t kernel_stack_top = (uint32_t)&nextproc->pstack[sizeof(nextproc->pstack)];
+    k_printf("  Setting sscratch to kernel_stack_top = %x\n", kernel_stack_top);
+    
+    __asm__ __volatile__(
+        "csrw sscratch, %0\n"
+        :
+        : "r" (kernel_stack_top)
+    );
+    
     // Update currproc
     currproc = nextproc;
     currproc->pstate = RUNNING;
 
+    k_printf("  Flushing TLB with pdbr = %x\n", nextproc->pdbr);
+    
     // Flush TLB en set SATPset met nieuwe PDBR 
     Flush_TLB(nextproc);
 
+    k_printf("  Calling switch_proc:\n");
+    k_printf("    &oldproc->psp = %x (value = ", &oldproc->psp);
+    if (oldproc) {
+        k_printf("%x", oldproc->psp);
+    } else {
+        k_printf("NULL");
+    }
+    k_printf(")\n");
+    
+    k_printf("    &nextproc->psp = %x (value = %x)\n", 
+             &nextproc->psp, nextproc->psp);
+    
     // Context switch
     switch_proc(&oldproc->psp, &nextproc->psp);
+    
+    // Deze code wordt alleen bereikt na terugkeer van switch_proc
+    k_printf("DEBUG: Returned from switch_proc to PID %d\n", currproc->pid);
 }

@@ -1,4 +1,5 @@
 #include "pcb_k.h"
+#include "csr.h"
 
 extern char __kernel_base[];
 extern char __free_ram_start[], __free_ram_end[];
@@ -8,7 +9,46 @@ pcb *currproc = NULL;
 pcb *idleproc = NULL;
 
 extern uint32_t kernel_main;
-extern uint32_t switch_umode;
+
+    #define USR_BASE_VA 0x08000000
+    #define SSTAT_SPIE (1 << 5)  // SPIE-bit = 1
+
+__attribute__((noreturn))
+void switch_umode(void) {
+    k_printf("DEBUG: Entering switch_umode()\n");
+    k_printf("  USR_BASE_VA = %x\n", USR_BASE_VA);
+    k_printf("  SEPC will be set to: %x\n", USR_BASE_VA);
+    
+    // Lees huidige SEPC
+    uint32_t csr_sepc = read_csr(0x141);
+    k_printf("  Current SEPC = %x\n", csr_sepc);
+    
+    // Lees huidige SSTATUS
+    uint32_t csr_sstatus = read_csr(0x100);
+    k_printf("  Current SSTATUS = %x\n", csr_sstatus);
+    
+    // Lees SATP
+    uint32_t csr_satp = read_csr(0x180);
+    k_printf("  Current SATP = %x\n", csr_satp);
+    
+    #define SSTAT_SPIE (1 << 5)  // SPIE-bit = 1
+    
+    k_printf("  About to execute SRET to user mode...\n");
+    
+    __asm__ __volatile__(
+        "csrw sepc, %0\n"
+        "csrw sstatus, %1\n"
+        "sret\n"
+        :
+        : "r" (USR_BASE_VA), "r" (SSTAT_SPIE)
+    );
+    
+    // Deze code wordt nooit bereikt als SRET werkt
+    k_printf("ERROR: SRET returned! This should not happen.\n");
+    while(1) {
+        __asm__ __volatile__("nop");
+    }
+}
 
 #define USR_BASE_VA 0x08000000
 

@@ -94,27 +94,7 @@ void MNU_init(void){
     k_printf("\n===MNU is now online===\n");
 }
 
-__attribute__((noreturn))
-void switch_umode(void) {
-    // Zet SPP-bit op 0 (User mode) en SPIE-bit op 1 (interrupts enabled na SRET)
-    // Volgens RISC-V spec: 
-    // - SPP is bit 8 (0 = user, 1 = supervisor)
-    // - SPIE is bit 5 (1 = interrupts enabled)
-    #define SSTAT_SPIE (1 << 5)  // SPIE-bit = 1
-    
-    // Zet SEPC naar het startadres van user processen
-    // Dit is het virtuele adres waar user binaries beginnen
-    #define USR_BASE_VA 0x08000000
-    
-    __asm__ __volatile__(
-        "csrw sepc, %0\n"      // Zet SEPC naar USR_BASE_VA
-        "csrw sstatus, %1\n"   // Zet SSTATUS met SPIE=1, SPP=0
-        "sret\n"               // Keer terug naar U-mode
-        :
-        : "r" (USR_BASE_VA), "r" (SSTAT_SPIE)
-    );
-    k_panic("u_mode fail....\n", "");
-}
+
 
 // In je kernel.c, gebruik deze symbolen:
 extern char _binary_besh_bin_start[];
@@ -126,7 +106,7 @@ void kernel_main(void) {
     
     spawn_proc((uint32_t)_binary_besh_bin_start, (uint32_t)_binary_besh_bin_size);
 
-    yield();
+   yield();
     
     // Kernel panic zoals vereist
     k_panic("kernel.c:301:boot-up succeeded, now in PID 0 (idlin') ...", "");

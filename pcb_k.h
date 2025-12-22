@@ -31,4 +31,6 @@ extern pcb *idleproc;
 
 pcb *spawn_proc(uint32_t  image, uint32_t imagesize);
 
+void switch_umode(void);
+
 #endif
