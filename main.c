@@ -97,6 +97,9 @@ void MNU_init(void){
 extern char _binary_build_main_bin_start[];//binary
 extern char _binary_build_main_bin_size[];
 
+void switch_umode(void){
+    return;
+}
 void kernel_main(void) {
     kernel_bootstrap();
     

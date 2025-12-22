@@ -29,6 +29,6 @@ extern pcb *currproc;
 
 extern pcb *idleproc;
 
-pcb *spawn_proc(uint32_t entrypoint, uint32_t size);
+pcb *spawn_proc(uint32_t  image, uint32_t imagesize);
 
 #endif
