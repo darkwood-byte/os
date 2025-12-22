@@ -7,6 +7,8 @@ pcb proclist[MAXPROCS];//pcb memory voor de stackjes
 pcb *currproc = NULL;
 pcb *idleproc = NULL;
 
+
+
 pcb *spawn_proc(uint32_t entrypoint) {
     pcb *p = NULL;
     

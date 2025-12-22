@@ -2,7 +2,7 @@ CC = clang
 TARGET = riscv32-unknown-elf
 OUTPUT = build/main.elf
 SOURCES = main.c print_k.c SBI.c mem.c str.c oa.c memory.c trap_k.c pcb_k.c program_k.c
-OBJECTS = $(SOURCES:%.c=build/%.o)
+OBJECTS = $(SOURCES:%.c=build/%.o) bronx.bin.o
 LINKER_SCRIPT = kernel.ld
 DEPFILES = $(SOURCES:%.c=build/%.d)
 HEADERS = main.h 
@@ -10,10 +10,10 @@ HEADERS = main.h
 # Compile flags
 CFLAGS = -std=c11 -O2 -g3 -Wall -Wextra -Wconversion -Wpedantic \
          -fno-stack-protector -ffreestanding -nostdlib -static \
-         --target=$(TARGET)
+         --target=$(TARGET) 
 
 # Link flags (inclusief -fuse-ld=lld dat alleen voor linking nodig is)
-LDFLAGS = -fuse-ld=lld
+LDFLAGS = -fuse-ld=lld -Wl,-Map=kernel.map
 
 # Flags voor dependency generation
 DEPFLAGS = -MMD -MP

@@ -94,26 +94,16 @@ void MNU_init(void){
     k_printf("\n===MNU is now online===\n");
 }
 
+extern char _binary_build_main_bin_start[];//binary
+extern char _binary_build_main_bin_size[];
+
 void kernel_main(void) {
     kernel_bootstrap();
-    char c = (char)0;
-    while(1){
-        c = k_readchar();
-        if(c)k_putchar(c);
-    }
     
-    k_printf("\n=== Creating test user processes ===\n");
+    k_printf("binary start: %p\n", (uint32_t)_binary_build_main_bin_start);
+     k_printf("binary size: %p\n", (uint32_t)_binary_build_main_bin_size);
     
-    spawn_proc((uint32_t)proc0);
-    spawn_proc((uint32_t)proc1);
-    
-    k_sp();
-    k_printf("sizeof pcb_list: %d\n\n", sizeof(proclist));
-    MNU_init();//start de mnu voordat de sheduler begint 
-    k_printf("Round-robin cooperative scheduler is now starting:\n\n");
-    yield();
-    
-    k_panic("Returned to kernel_main after yield!, now idling foreva jipeeeee . . .", "");
+    k_panic("Kernel end!...\n", "");
 }
 
 __attribute__((section(".text.boot")))
