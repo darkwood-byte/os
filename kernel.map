@@ -1041,29 +1041,29 @@
 802015dc 802015dc        0     1                 
 802015dc 802015dc        0     1                 
 802015dc 802015dc      8bc     4 .rodata
-802015dc 802015dc      80c     1         <internal>:(.rodata)
+802015dc 802015dc      80a     1         <internal>:(.rodata)
 80201de8 80201de8       58     4         build/print_k.o:(.rodata)
 80201de8 80201de8        0     1                 .LJTI0_0
 80201e40 80201e40       58     4         build/str.o:(.rodata)
 80201e40 80201e40        0     1                 .LJTI2_0
-80201e98 80201e98     8090     4 .data
-80201e98 80201e98     8090     1         besh.bin.o:(.data)
+80201e98 80201e98     80b0     4 .data
+80201e98 80201e98     80b0     1         besh.bin.o:(.data)
 80201e98 80201e98        0     1                 _binary_besh_bin_start
-80209f28 80209f28        0     1                 _binary_besh_bin_end
-80209f28 80209f28     104c     4 .bss
-80209f28 80209f28        0     1         __bss = .
-80209f28 80209f28        4     4         build/memory.o:(.sbss)
-80209f28 80209f28        4     1                 nextfreepageframe
-80209f2c 80209f2c        8     4         build/pcb_k.o:(.sbss)
-80209f2c 80209f2c        4     1                 currproc
-80209f30 80209f30        4     1                 idleproc
-80209f34 80209f34     1040     4         build/pcb_k.o:(.bss)
-80209f34 80209f34     1040     1                 proclist
-8020af74 8020af74        0     1         __bss_end = .
-8020af74 8020af74        0     1 . = ALIGN ( 4 )
-8020af74 8020af74    20000     1 . += 128 * 1024
-8022af74 8022af74        0     1 __stack_top = .
-8022af74 8022af74       8c     1 . = ALIGN ( 4096 )
+80209f48 80209f48        0     1                 _binary_besh_bin_end
+80209f48 80209f48     104c     4 .bss
+80209f48 80209f48        0     1         __bss = .
+80209f48 80209f48        4     4         build/memory.o:(.sbss)
+80209f48 80209f48        4     1                 nextfreepageframe
+80209f4c 80209f4c        8     4         build/pcb_k.o:(.sbss)
+80209f4c 80209f4c        4     1                 currproc
+80209f50 80209f50        4     1                 idleproc
+80209f54 80209f54     1040     4         build/pcb_k.o:(.bss)
+80209f54 80209f54     1040     1                 proclist
+8020af94 8020af94        0     1         __bss_end = .
+8020af94 8020af94        0     1 . = ALIGN ( 4 )
+8020af94 8020af94    20000     1 . += 128 * 1024
+8022af94 8022af94        0     1 __stack_top = .
+8022af94 8022af94       6c     1 . = ALIGN ( 4096 )
 8022b000 8022b000        0     1 __free_ram_start = .
 8022b000 8022b000  2000000     1 . += 32 * 1024 * 1024
 8222b000 8222b000        0     1 __free_ram_end = .

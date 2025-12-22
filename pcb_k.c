@@ -15,7 +15,7 @@ extern uint32_t kernel_main;
 
 __attribute__((noreturn))
 void switch_umode(void) {
-    k_printf("  entering usermode\n");
+    k_printf("entering usermode\n");
     __asm__ __volatile__(
         "csrw sepc, %0\n"
         "csrw sstatus, %1\n"
@@ -32,8 +32,7 @@ pcb *spawn_proc(uint32_t image, uint32_t imagesize) {
     
     k_printf("spawn_proc called with image=%p, size=%p\n", image, imagesize);
     
-    // 1. Zoek de pointer naar het eerstvolgende vrije proces 'p' in 'proclist'
-    for(uint32_t i = 0; i < MAXPROCS; i++) {
+    for(uint32_t i = 0; i < MAXPROCS; i++) {//pcb
         if(proclist[i].pstate == NOPROC) {
             p = &proclist[i];
             p->pid = i;
@@ -47,12 +46,12 @@ pcb *spawn_proc(uint32_t image, uint32_t imagesize) {
         return NULL;
     }
     
-    // Initialiseer de stack
+    // stack
     k_printf("Initializing stack for PID %d\n", p->pid);
     memset(p->pstack, 0, sizeof(p->pstack));
     p->pstate = READY;
     
-    // 2. Zet de 12 hoogste '32-bit-waarden' in de adresruimte van p op 0
+    //regs
     uintptr_t stack_top = (uintptr_t)&p->pstack[0] + sizeof(p->pstack);
     uint32_t *sp = (uint32_t*)stack_top;
     
@@ -67,14 +66,14 @@ pcb *spawn_proc(uint32_t image, uint32_t imagesize) {
         *sp = 0;
     }
     
-    // 3. Zet in de 13-vóór-hoogste '32-bit-waarde' de entrypoint
+    //  entrypoint
     sp--;
     if (image == (uint32_t)NULL && imagesize == 0) {
         // PID 0: idle proces, geen user mode
         k_printf("PID %d: Setting kernel_main as entrypoint\n", p->pid);
         *sp = (uint32_t)kernel_main;
     } else {
-        // User mode proces: gebruik switch_umode
+        // User mode proces: gebruik switch_umode hier wel
         k_printf("PID %d: Setting switch_umode as entrypoint\n", p->pid);
         *sp = (uint32_t)switch_umode;
     }
