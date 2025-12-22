@@ -1,7 +1,7 @@
      VMA      LMA     Size Align Out     In      Symbol
        0        0 80200000     1 . = 0x80200000
 80200000        0        0     1 __kernel_base = .
-80200000 80200000     18ba     4 .text
+80200000 80200000     15dc     4 .text
 80200000 80200000        e     2         build/main.o:(.text.boot)
 80200000 80200000        0     1                 
 80200000 80200000        0     1                 
@@ -956,7 +956,7 @@
 80201472 80201472        0     1                 
 80201474 80201474        0     1                 
 80201474 80201474        0     1                 
-80201474 80201474      446     4         build/program_k.o:(.text)
+80201474 80201474      168     4         build/program_k.o:(.text)
 80201474 80201474        0     1                 
 80201474 80201474        0     1                 
 80201474 80201474        0     1                 
@@ -979,185 +979,95 @@
 802014ce 802014ce        0     1                 
 802014ce 802014ce        0     1                 
 802014ce 802014ce        0     1                 
-802014ce 802014ce      3ec     1                 yield
-802014d0 802014d0        0     1                 
-802014d0 802014d0        0     1                 
+802014ce 802014ce        0     1                 
+802014ce 802014ce      10e     1                 yield
+802014d6 802014d6        0     1                 
+802014dc 802014dc        0     1                 
+802014de 802014de        0     1                 
+802014e2 802014e2        0     1                 
+802014e6 802014e6        0     1                 
+802014e8 802014e8        0     1                 
 802014ea 802014ea        0     1                 
-802014f2 802014f2        0     1                 
-802014f8 802014f8        0     1                 
-802014fc 802014fc        0     1                 
-80201502 80201502        0     1                 
-80201506 80201506        0     1                 
-80201508 80201508        0     1                 
-8020150c 8020150c        0     1                 
-80201510 80201510        0     1                 
+802014ec 802014ec        0     1                 
+802014f0 802014f0        0     1                 
+802014f0 802014f0        0     1                 
+802014f4 802014f4        0     1                 
+802014f6 802014f6        0     1                 
+802014fa 802014fa        0     1                 
+8020150a 8020150a        0     1                 
+8020150e 8020150e        0     1                 
+80201512 80201512        0     1                 
 80201514 80201514        0     1                 
-80201514 80201514        0     1                 
-80201518 80201518        0     1                 
+80201516 80201516        0     1                 
 8020151a 8020151a        0     1                 
-8020151e 8020151e        0     1                 
-8020152e 8020152e        0     1                 
-80201532 80201532        0     1                 
+8020152c 8020152c        0     1                 
+80201530 80201530        0     1                 
+80201534 80201534        0     1                 
 80201536 80201536        0     1                 
 80201538 80201538        0     1                 
-8020153a 8020153a        0     1                 
-8020153e 8020153e        0     1                 
-80201550 80201550        0     1                 
-80201554 80201554        0     1                 
+8020153c 8020153c        0     1                 
+8020154e 8020154e        0     1                 
+80201552 80201552        0     1                 
+80201556 80201556        0     1                 
 80201558 80201558        0     1                 
 8020155a 8020155a        0     1                 
-8020155c 8020155c        0     1                 
-80201560 80201560        0     1                 
-80201572 80201572        0     1                 
-80201576 80201576        0     1                 
-8020157a 8020157a        0     1                 
-8020157c 8020157c        0     1                 
-80201580 80201580        0     1                 
-80201584 80201584        0     1                 
-80201596 80201596        0     1                 
-8020159a 8020159a        0     1                 
-8020159a 8020159a        0     1                 
+8020155e 8020155e        0     1                 
+80201570 80201570        0     1                 
+80201574 80201574        0     1                 
+80201574 80201574        0     1                 
+80201586 80201586        0     1                 
+80201588 80201588        0     1                 
+8020158c 8020158c        0     1                 
+80201590 80201590        0     1                 
+80201594 80201594        0     1                 
+8020159c 8020159c        0     1                 
+8020159e 8020159e        0     1                 
+802015a0 802015a0        0     1                 
+802015a2 802015a2        0     1                 
+802015a4 802015a4        0     1                 
+802015a8 802015a8        0     1                 
+802015aa 802015aa        0     1                 
+802015ac 802015ac        0     1                 
 802015ae 802015ae        0     1                 
-802015b0 802015b0        0     1                 
-802015b4 802015b4        0     1                 
-802015b8 802015b8        0     1                 
-802015bc 802015bc        0     1                 
+802015b6 802015b6        0     1                 
+802015b6 802015b6        0     1                 
 802015be 802015be        0     1                 
+802015c6 802015c6        0     1                 
+802015ca 802015ca        0     1                 
+802015cc 802015cc        0     1                 
 802015ce 802015ce        0     1                 
-802015ce 802015ce        0     1                 
+802015d4 802015d4        0     1                 
 802015d8 802015d8        0     1                 
 802015dc 802015dc        0     1                 
-802015fa 802015fa        0     1                 
-8020160a 8020160a        0     1                 
-8020160a 8020160a        0     1                 
-8020161a 8020161a        0     1                 
-8020161a 8020161a        0     1                 
-80201620 80201620        0     1                 
-8020162a 8020162a        0     1                 
-8020162a 8020162a        0     1                 
-8020163a 8020163a        0     1                 
-8020163a 8020163a        0     1                 
-8020163e 8020163e        0     1                 
-8020164e 8020164e        0     1                 
-8020164e 8020164e        0     1                 
-802016d0 802016d0        0     1                 
-802016d0 802016d0        0     1                 
-802016d4 802016d4        0     1                 
-802016d6 802016d6        0     1                 
-802016e0 802016e0        0     1                 
-802016e0 802016e0        0     1                 
-802016e4 802016e4        0     1                 
-802016ee 802016ee        0     1                 
-802016ee 802016ee        0     1                 
-802016f2 802016f2        0     1                 
-802016fc 802016fc        0     1                 
-802016fc 802016fc        0     1                 
-80201704 80201704        0     1                 
-8020170e 8020170e        0     1                 
-8020170e 8020170e        0     1                 
-80201718 80201718        0     1                 
-80201718 80201718        0     1                 
-80201724 80201724        0     1                 
-80201724 80201724        0     1                 
-80201730 80201730        0     1                 
-80201730 80201730        0     1                 
-80201732 80201732        0     1                 
-80201736 80201736        0     1                 
-80201738 80201738        0     1                 
-8020173e 8020173e        0     1                 
-80201740 80201740        0     1                 
-80201746 80201746        0     1                 
-80201748 80201748        0     1                 
-8020174a 8020174a        0     1                 
-80201752 80201752        0     1                 
-80201752 80201752        0     1                 
-8020175c 8020175c        0     1                 
-8020175c 8020175c        0     1                 
-8020175e 8020175e        0     1                 
-80201760 80201760        0     1                 
-8020176a 8020176a        0     1                 
-8020176a 8020176a        0     1                 
-8020177a 8020177a        0     1                 
-8020177a 8020177a        0     1                 
-80201792 80201792        0     1                 
-80201792 80201792        0     1                 
-80201794 80201794        0     1                 
-80201796 80201796        0     1                 
-802017a6 802017a6        0     1                 
-802017a6 802017a6        0     1                 
-802017aa 802017aa        0     1                 
-802017bc 802017bc        0     1                 
-802017bc 802017bc        0     1                 
-802017c0 802017c0        0     1                 
-802017c8 802017c8        0     1                 
-802017cc 802017cc        0     1                 
-802017ce 802017ce        0     1                 
-802017de 802017de        0     1                 
-802017de 802017de        0     1                 
-802017e0 802017e0        0     1                 
-802017e2 802017e2        0     1                 
-802017e6 802017e6        0     1                 
-802017e8 802017e8        0     1                 
-802017f0 802017f0        0     1                 
-802017f0 802017f0        0     1                 
-80201800 80201800        0     1                 
-80201800 80201800        0     1                 
-80201802 80201802        0     1                 
-80201806 80201806        0     1                 
-80201818 80201818        0     1                 
-80201818 80201818        0     1                 
-8020181a 8020181a        0     1                 
-8020181c 8020181c        0     1                 
-8020182c 8020182c        0     1                 
-8020182c 8020182c        0     1                 
-8020182e 8020182e        0     1                 
-8020183e 8020183e        0     1                 
-8020183e 8020183e        0     1                 
-80201840 80201840        0     1                 
-80201850 80201850        0     1                 
-80201850 80201850        0     1                 
-80201852 80201852        0     1                 
-80201864 80201864        0     1                 
-80201864 80201864        0     1                 
-80201870 80201870        0     1                 
-80201870 80201870        0     1                 
-80201878 80201878        0     1                 
-8020187a 8020187a        0     1                 
-8020189e 8020189e        0     1                 
-802018a6 802018a6        0     1                 
-802018aa 802018aa        0     1                 
-802018b2 802018b2        0     1                 
-802018b6 802018b6        0     1                 
-802018ba 802018ba        0     1                 
-802018ba 802018ba        0     1                 
-802018bc 802018bc      a60     4 .rodata
-802018bc 802018bc      9b0     1         <internal>:(.rodata)
-8020226c 8020226c       58     4         build/print_k.o:(.rodata)
-8020226c 8020226c        0     1                 .LJTI0_0
-802022c4 802022c4       58     4         build/str.o:(.rodata)
-802022c4 802022c4        0     1                 .LJTI2_0
-8020231c 8020231c     8090     4 .data
-8020231c 8020231c     8090     1         besh.bin.o:(.data)
-8020231c 8020231c        0     1                 _binary_besh_bin_start
-8020a3ac 8020a3ac        0     1                 _binary_besh_bin_end
-8020a3ac 8020a3ac     104c     4 .bss
-8020a3ac 8020a3ac        0     1         __bss = .
-8020a3ac 8020a3ac        4     4         build/memory.o:(.sbss)
-8020a3ac 8020a3ac        4     1                 nextfreepageframe
-8020a3b0 8020a3b0        8     4         build/pcb_k.o:(.sbss)
-8020a3b0 8020a3b0        4     1                 currproc
-8020a3b4 8020a3b4        4     1                 idleproc
-8020a3b8 8020a3b8     1040     4         build/pcb_k.o:(.bss)
-8020a3b8 8020a3b8     1040     1                 proclist
-8020b3f8 8020b3f8        0     1         __bss_end = .
-8020b3f8 8020b3f8        0     1 . = ALIGN ( 4 )
-8020b3f8 8020b3f8    20000     1 . += 128 * 1024
-8022b3f8 8022b3f8        0     1 __stack_top = .
-8022b3f8 8022b3f8      c08     1 . = ALIGN ( 4096 )
-8022c000 8022c000        0     1 __free_ram_start = .
-8022c000 8022c000  2000000     1 . += 32 * 1024 * 1024
-8222c000 8222c000        0     1 __free_ram_end = .
-       0        0      e93     1 .debug_loclists
+802015dc 802015dc        0     1                 
+802015dc 802015dc      8bc     4 .rodata
+802015dc 802015dc      80c     1         <internal>:(.rodata)
+80201de8 80201de8       58     4         build/print_k.o:(.rodata)
+80201de8 80201de8        0     1                 .LJTI0_0
+80201e40 80201e40       58     4         build/str.o:(.rodata)
+80201e40 80201e40        0     1                 .LJTI2_0
+80201e98 80201e98     8090     4 .data
+80201e98 80201e98     8090     1         besh.bin.o:(.data)
+80201e98 80201e98        0     1                 _binary_besh_bin_start
+80209f28 80209f28        0     1                 _binary_besh_bin_end
+80209f28 80209f28     104c     4 .bss
+80209f28 80209f28        0     1         __bss = .
+80209f28 80209f28        4     4         build/memory.o:(.sbss)
+80209f28 80209f28        4     1                 nextfreepageframe
+80209f2c 80209f2c        8     4         build/pcb_k.o:(.sbss)
+80209f2c 80209f2c        4     1                 currproc
+80209f30 80209f30        4     1                 idleproc
+80209f34 80209f34     1040     4         build/pcb_k.o:(.bss)
+80209f34 80209f34     1040     1                 proclist
+8020af74 8020af74        0     1         __bss_end = .
+8020af74 8020af74        0     1 . = ALIGN ( 4 )
+8020af74 8020af74    20000     1 . += 128 * 1024
+8022af74 8022af74        0     1 __stack_top = .
+8022af74 8022af74       8c     1 . = ALIGN ( 4096 )
+8022b000 8022b000        0     1 __free_ram_start = .
+8022b000 8022b000  2000000     1 . += 32 * 1024 * 1024
+8222b000 8222b000        0     1 __free_ram_end = .
+       0        0      e61     1 .debug_loclists
        0        0      53f     1         build/main.o:(.debug_loclists)
        c        c        0     1                 
      53f      53f      115     1         build/print_k.o:(.debug_loclists)
@@ -1176,9 +1086,9 @@
      bd7      bd7        0     1                 
      c04      c04      15a     1         build/pcb_k.o:(.debug_loclists)
      c10      c10        0     1                 
-     d5e      d5e      135     1         build/program_k.o:(.debug_loclists)
+     d5e      d5e      103     1         build/program_k.o:(.debug_loclists)
      d6a      d6a        0     1                 
-       0        0      c4c     1 .debug_abbrev
+       0        0      c07     1 .debug_abbrev
        0        0      1a1     1         build/main.o:(.debug_abbrev)
      1a1      1a1      104     1         build/print_k.o:(.debug_abbrev)
      2a5      2a5      15a     1         build/SBI.o:(.debug_abbrev)
@@ -1188,8 +1098,8 @@
      6f7      6f7      14c     1         build/memory.o:(.debug_abbrev)
      843      843      129     1         build/trap_k.o:(.debug_abbrev)
      96c      96c      165     1         build/pcb_k.o:(.debug_abbrev)
-     ad1      ad1      17b     1         build/program_k.o:(.debug_abbrev)
-       0        0     15f3     1 .debug_info
+     ad1      ad1      136     1         build/program_k.o:(.debug_abbrev)
+       0        0     14ff     1 .debug_info
        0        0      3e8     1         build/main.o:(.debug_info)
      3e8      3e8      1e5     1         build/print_k.o:(.debug_info)
      5cd      5cd      242     1         build/SBI.o:(.debug_info)
@@ -1199,8 +1109,8 @@
      c61      c61      1dd     1         build/memory.o:(.debug_info)
      e3e      e3e      27c     1         build/trap_k.o:(.debug_info)
     10ba     10ba      2b9     1         build/pcb_k.o:(.debug_info)
-    1373     1373      280     1         build/program_k.o:(.debug_info)
-       0        0      1f6     1 .debug_rnglists
+    1373     1373      18c     1         build/program_k.o:(.debug_info)
+       0        0      216     1 .debug_rnglists
        0        0       bd     1         build/main.o:(.debug_rnglists)
        c        c        0     1                 
       bd       bd       57     1         build/print_k.o:(.debug_rnglists)
@@ -1211,7 +1121,9 @@
      186      186        0     1                 
      195      195       61     1         build/pcb_k.o:(.debug_rnglists)
      1a1      1a1        0     1                 
-       0        0      5e0     1 .debug_str_offsets
+     1f6      1f6       20     1         build/program_k.o:(.debug_rnglists)
+     202      202        0     1                 
+       0        0      5c8     1 .debug_str_offsets
        0        0       b4     1         build/main.o:(.debug_str_offsets)
        8        8        0     1                 
       b4       b4       68     1         build/print_k.o:(.debug_str_offsets)
@@ -1230,11 +1142,11 @@
      368      368        0     1                 
      47c      47c       c4     1         build/pcb_k.o:(.debug_str_offsets)
      484      484        0     1                 
-     540      540       a0     1         build/program_k.o:(.debug_str_offsets)
+     540      540       88     1         build/program_k.o:(.debug_str_offsets)
      548      548        0     1                 
-       0        0      5de     1 .debug_str
-       0        0      5de     1         <internal>:(.debug_str)
-       0        0      36c     1 .debug_addr
+       0        0      5d3     1 .debug_str
+       0        0      5d3     1         <internal>:(.debug_str)
+       0        0      2fc     1 .debug_addr
        0        0      128     1         build/main.o:(.debug_addr)
        8        8        0     1                 
      128      128       50     1         build/print_k.o:(.debug_addr)
@@ -1253,13 +1165,13 @@
      23c      23c        0     1                 
      25c      25c       84     1         build/pcb_k.o:(.debug_addr)
      264      264        0     1                 
-     2e0      2e0       8c     1         build/program_k.o:(.debug_addr)
+     2e0      2e0       1c     1         build/program_k.o:(.debug_addr)
      2e8      2e8        0     1                 
        0        0       42     1 .comment
        0        0       42     1         <internal>:(.comment)
        0        0       2b     1 .riscv.attributes
        0        0       2b     1         build/main.o:(.riscv.attributes)
-       0        0      384     4 .debug_frame
+       0        0      364     4 .debug_frame
        0        0       c8     4         build/main.o:(.debug_frame)
        0        0        0     1                 
       c8       c8       44     4         build/print_k.o:(.debug_frame)
@@ -1278,9 +1190,9 @@
      28c      28c        0     1                 
      2c8      2c8       58     4         build/pcb_k.o:(.debug_frame)
      2c8      2c8        0     1                 
-     320      320       64     4         build/program_k.o:(.debug_frame)
+     320      320       44     4         build/program_k.o:(.debug_frame)
      320      320        0     1                 
-       0        0     1d73     1 .debug_line
+       0        0     1b81     1 .debug_line
        0        0      6b2     1         build/main.o:(.debug_line)
        0        0        0     1                 .Lline_table_start0
      6b2      6b2      2d0     1         build/print_k.o:(.debug_line)
@@ -1299,12 +1211,12 @@
     1400     1400        0     1                 .Lline_table_start0
     14f9     14f9      3e5     1         build/pcb_k.o:(.debug_line)
     14f9     14f9        0     1                 .Lline_table_start0
-    18de     18de      495     1         build/program_k.o:(.debug_line)
+    18de     18de      2a3     1         build/program_k.o:(.debug_line)
     18de     18de        0     1                 .Lline_table_start0
        0        0       c2     1 .debug_line_str
        0        0       c2     1         <internal>:(.debug_line_str)
-       0        0     6120     4 .symtab
-       0        0     6120     4         <internal>:(.symtab)
+       0        0     5b30     4 .symtab
+       0        0     5b30     4         <internal>:(.symtab)
        0        0       dc     1 .shstrtab
        0        0       dc     1         <internal>:(.shstrtab)
        0        0      374     1 .strtab
