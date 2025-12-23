@@ -61,7 +61,8 @@ typedef struct
 
 app app_list[MAX_APPS];
 
-void init_app(char name[12], char start[], char size[]){
+//voegt een app toe aan het telfoon boekje van de kernel
+uint32_t init_app(char name[12], char start[], char size[]){
     app new_app;
     for (int i = 0; i < 11 && name[i] != '\0'; i++) {
         new_app.name[i] = name[i];
@@ -71,25 +72,23 @@ void init_app(char name[12], char start[], char size[]){
     new_app.size = (uint32_t)size;
 
     for(uint32_t i = 0; i < MAX_APPS; i++){
-        if (app_list[i].size == 0){app_list[i] = new_app; return;}
+        if (app_list[i].size == 0){app_list[i] = new_app; return i;}
     }
     k_panic("\nno free app slots found for %s\n", name);
 }
 
+//start een app
+void start_app(uint32_t app_id){
+    if (app_id > MAX_APPS || app_list[app_id].size == 0)k_panic("tried to start a non vaild app_id: %d\n", app_id);
+    spawn_proc(app_list[app_id].start, app_list[app_id].size);
+}
 
 void kernel_main(void) {
     kernel_bootstrap();
     
-    init_app("besh", _binary_besh_bin_start, _binary_besh_bin_size);
-    init_app("besh", _binary_besh_bin_start, _binary_besh_bin_size);
-    init_app("besh", _binary_besh_bin_start, _binary_besh_bin_size);
-
-    spawn_proc((uint32_t)_binary_besh_bin_start, (uint32_t)_binary_besh_bin_size);
+    start_app( init_app("besh", _binary_besh_bin_start, _binary_besh_bin_size));
     yield();
     
-    
-    
-    // Kernel panic zoals vereist
     k_panic("now in PID 0 (idlin') ...", "");
 }
 
