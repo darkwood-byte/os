@@ -19,7 +19,7 @@ uint32_t init_app(char name[12], char start[], char size[]){
 }
 
 //start een app
-void start_app(uint32_t app_id){
+uint32_t start_app(uint32_t app_id){
     if (app_id > MAX_APPS || app_list[app_id].size == 0)k_panic("tried to start a non vaild app_id: %d\n", app_id);
-    spawn_proc(app_list[app_id].start, app_list[app_id].size);
+    return spawn_proc(app_list[app_id].start, app_list[app_id].size)->pid;//geef het niewe pid tereug
 }

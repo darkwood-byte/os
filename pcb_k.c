@@ -67,11 +67,13 @@ pcb *spawn_proc(uint32_t image, uint32_t imagesize) {
     if (image == (uint32_t)NULL && imagesize == 0) {
         // PID 0: idle proces, geen user mode
         *sp = (uint32_t)kernel_main;
+         p->parent_id = 0;
     } else {
         // User mode proces: gebruik switch_umode hier wel
         *sp = (uint32_t)switch_umode;
+         p->parent_id = currproc->pid;
     }
-    
+
     p->psp = (uint32_t)(uintptr_t)sp;
     
     // 4. Maak Page Directory aan en page het GEHELE kernel-proces

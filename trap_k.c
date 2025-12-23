@@ -32,11 +32,18 @@ void handle_syscall(trap_frame *tf) {
             yield();
             break;
         case SYSCALL_KILL:
-            currproc->pstate = NOPROC;
-            yield();
+            if(arg0 == 0){//when you kill the kernel the kernel kill you =]
+                currproc->pstate = NOPROC;
+                yield();
+            }
+            else{
+                if (arg0 > MAXPROCS)k_panic("system call tried to call non vail proces id: %d\n", arg0);
+                if(proclist[arg0].parent_id == 0 && currproc->parent_id != 0)k_panic("can't stop a root program from non root program id: \n", arg0);//0 means that the kernel made the program
+                else proclist[arg0].pstate = NOPROC;
+            }
             break;
-        case SYSCALL_START:
-            start_app(arg0);
+        case SYSCALL_START:  
+            tf->a0 = start_app(arg0);
             break;
             
         default:

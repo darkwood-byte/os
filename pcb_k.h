@@ -17,6 +17,7 @@ typedef enum {
 
 typedef struct {
     uint32_t pid;
+    uint32_t parent_id;
     procstate pstate;
     uint32_t psp;
     uint32_t *pdbr; // <=== Process 'page directory base register'
