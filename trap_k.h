@@ -5,6 +5,7 @@
 #include "types.h"
 #include "csr.h"
 #include "print_k.h"
+#include "program_k.h"
 
 void handle_trap(trap_frame *tf) ;
 

@@ -38,20 +38,7 @@ void k_sleep(uint32_t ms) {
     }
 }
 
-void k_sp(void){//print de pcb status
-    k_printf("\n====active pcb's====\n");
-    for (uint32_t i = 0; i < MAXPROCS; i++){
-        if(proclist[i].pstate == NOPROC){
-            k_printf("p: %d :: does not exist\n", i);
-        }
-        else{
-            k_printf("p: %d :: state : %d  psp : %p\n", i, proclist[i].pstate, proclist[i].psp);
-            k_printf("&proclist[%d] = %p\n", i, &proclist[i]);
 
-        }
-    }
-    k_printf("\n====end of active pcb's====\n");
-}
 
 // === gefixde TEST PROCESSEN ;)===
 void proc0(void) {
@@ -105,11 +92,12 @@ void kernel_main(void) {
     kernel_bootstrap();
     
     spawn_proc((uint32_t)_binary_besh_bin_start, (uint32_t)_binary_besh_bin_size);
+    spawn_proc((uint32_t)_binary_besh_bin_start, (uint32_t)_binary_besh_bin_size);
 
    yield();
     
     // Kernel panic zoals vereist
-    k_panic("kernel.c:301:boot-up succeeded, now in PID 0 (idlin') ...", "");
+    k_panic("now in PID 0 (idlin') ...", "");
 }
 
 __attribute__((section(".text.boot")))

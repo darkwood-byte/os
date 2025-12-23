@@ -21,9 +21,8 @@ void handle_syscall(trap_frame *tf) {
             break;
             
         case SYSCALL_EXIT:
-            k_panic("program end\n", "");
-           
-            while(1);
+            currproc->pstate = BLOCKED;
+            yield();
             break;
             
         default:
@@ -65,11 +64,10 @@ void switch_trap(void) {
         
         STORE_REGS()
         
-
         "csrr a0, sscratch\n"
         "sw a0, 124(sp)\n"
         
-        "addi a0, sp, 128\n"  // 124 + 4 = 128 (begin van de stack frame)
+        "addi a0, sp, 124\n"  //<--- oude bug(FIXED be aware)
         "csrw sscratch, a0\n"
        
         "mv a0, sp\n"         
