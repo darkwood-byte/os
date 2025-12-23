@@ -5,6 +5,7 @@
 #define SYSCALL_EXIT    0x03
 #define SYSCALL_YIELD    0x04
 #define SYSCALL_KILL 0x05
+#define SYSCALL_START 0x06
 
 void handle_syscall(trap_frame *tf) {
     uint32_t syscall_num = tf->a3;  // Syscall nummer staat in a3 volgens je wrapper
@@ -33,6 +34,9 @@ void handle_syscall(trap_frame *tf) {
         case SYSCALL_KILL:
             currproc->pstate = NOPROC;
             yield();
+            break;
+        case SYSCALL_START:
+            start_app(arg0);
             break;
             
         default:
