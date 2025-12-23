@@ -50,6 +50,8 @@ void MNU_init(void){
 extern char _binary_besh_bin_start[];
 extern char _binary_besh_bin_size[];
 
+#define MAX_APPS 10
+
 typedef struct
 {
     char name[12];
@@ -57,7 +59,9 @@ typedef struct
     uint32_t size;
 }app;
 
-app init_app(char name[12], char start[], char size[]){
+app app_list[MAX_APPS];
+
+void init_app(char name[12], char start[], char size[]){
     app new_app;
     for (int i = 0; i < 11 && name[i] != '\0'; i++) {
         new_app.name[i] = name[i];
@@ -65,13 +69,19 @@ app init_app(char name[12], char start[], char size[]){
     new_app.name[11] = '\0';
     new_app.start = (uint32_t)start;
     new_app.size = (uint32_t)size;
-    
-    return new_app;
+
+    for(uint32_t i = 0; i < MAX_APPS; i++){
+        if (app_list[i].size == 0){app_list[i] = new_app; return;}
+    }
+    k_panic("\nno free app slots found for %s\n", name);
 }
+
 
 void kernel_main(void) {
     kernel_bootstrap();
     
+    init_app("besh", _binary_besh_bin_start, _binary_besh_bin_size);
+    init_app("besh", _binary_besh_bin_start, _binary_besh_bin_size);
     init_app("besh", _binary_besh_bin_start, _binary_besh_bin_size);
 
     spawn_proc((uint32_t)_binary_besh_bin_start, (uint32_t)_binary_besh_bin_size);
