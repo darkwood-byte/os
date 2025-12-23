@@ -1,8 +1,10 @@
 #include "trap_k.h"
 
-#define SYSCALL_PUTCHAR 1
-#define SYSCALL_GETCHAR 2
-#define SYSCALL_EXIT    3
+#define SYSCALL_PUTCHAR 0x01
+#define SYSCALL_GETCHAR 0x02
+#define SYSCALL_EXIT    0x03
+#define SYSCALL_YIELD    0x04
+#define SYSCALL_KILL 0x05
 
 void handle_syscall(trap_frame *tf) {
     uint32_t syscall_num = tf->a3;  // Syscall nummer staat in a3 volgens je wrapper
@@ -22,6 +24,14 @@ void handle_syscall(trap_frame *tf) {
             
         case SYSCALL_EXIT:
             currproc->pstate = BLOCKED;
+            yield();
+            break;
+        case SYSCALL_YIELD:
+            currproc->pstate = READY;
+            yield();
+            break;
+        case SYSCALL_KILL:
+            currproc->pstate = NOPROC;
             yield();
             break;
             

@@ -24,43 +24,6 @@ void kernel_bootstrap(void){
     k_printf("\nKernel Boot done. . .\n");
 }
 
-void k_sleep(uint32_t ms) {
-    const uint32_t FACTOR = 200000;//0.5 sec op mijn laptop maar dat vind ik juist lekker snell
-    const uint32_t MAX_MS = 0xffffffff / FACTOR;
-    
-    if (ms > MAX_MS) {
-        ms = MAX_MS;  // Capie 
-    }
-    
-    uint32_t total = ms * FACTOR;
-    for (uint32_t i = 0; i < total; i++) {
-        __asm__ __volatile__ ("nop");
-    }
-}
-
-
-
-// === gefixde TEST PROCESSEN ;)===
-void proc0(void) {
-    k_printf("\nStart van proc0 op PID: %d\n", currproc->pid);
-     for (uint8_t i = 0; i < 8; i++){
-        k_printf("currently in loop %d from proc0 hosted on PID: %d\n", i, currproc->pid);
-        yield();
-        k_sleep(1000);
-    }
-    kill();
-}
-
-void proc1(void) {
-    k_printf("\nStart van proc1 op PID: %d\n", currproc->pid);
-    for (uint8_t i = 0; i < 4; i++){
-        k_printf("currently in loop %d from proc1 hosted on PID: %d\n", i, currproc->pid);
-        yield();
-        k_sleep(1000);
-    }
-    kill();
-}
-
 void MNU_init(void){
         k_printf("\n=== Enabling MMU ===\n");
     
@@ -85,16 +48,36 @@ void MNU_init(void){
 
 // In je kernel.c, gebruik deze symbolen:
 extern char _binary_besh_bin_start[];
-extern char _binary_besh_bin_end[];
 extern char _binary_besh_bin_size[];
+
+typedef struct
+{
+    char name[12];
+    uint32_t start;
+    uint32_t size;
+}app;
+
+app init_app(char name[12], char start[], char size[]){
+    app new_app;
+    for (int i = 0; i < 11 && name[i] != '\0'; i++) {
+        new_app.name[i] = name[i];
+    }
+    new_app.name[11] = '\0';
+    new_app.start = (uint32_t)start;
+    new_app.size = (uint32_t)size;
+    
+    return new_app;
+}
 
 void kernel_main(void) {
     kernel_bootstrap();
     
-    spawn_proc((uint32_t)_binary_besh_bin_start, (uint32_t)_binary_besh_bin_size);
-    spawn_proc((uint32_t)_binary_besh_bin_start, (uint32_t)_binary_besh_bin_size);
+    init_app("besh", _binary_besh_bin_start, _binary_besh_bin_size);
 
-   yield();
+    spawn_proc((uint32_t)_binary_besh_bin_start, (uint32_t)_binary_besh_bin_size);
+    yield();
+    
+    
     
     // Kernel panic zoals vereist
     k_panic("now in PID 0 (idlin') ...", "");

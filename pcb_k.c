@@ -15,7 +15,6 @@ extern uint32_t kernel_main;
 
 __attribute__((noreturn))
 void switch_umode(void) {
-    k_printf("entering usermode\n");
     __asm__ __volatile__(
         "csrw sepc, %0\n"
         "csrw sstatus, %1\n"
@@ -30,13 +29,11 @@ void switch_umode(void) {
 pcb *spawn_proc(uint32_t image, uint32_t imagesize) {
     pcb *p = NULL;
     
-    k_printf("spawn_proc called with image=%p, size=%p\n", image, imagesize);
     
     for(uint32_t i = 0; i < MAXPROCS; i++) {//pcb
         if(proclist[i].pstate == NOPROC) {
             p = &proclist[i];
             p->pid = i;
-            k_printf("Found free PCB slot at PID %d\n", i);
             break;
         }
     }
@@ -47,7 +44,6 @@ pcb *spawn_proc(uint32_t image, uint32_t imagesize) {
     }
     
     // stack
-    k_printf("Initializing stack for PID %d\n", p->pid);
     memset(p->pstack, 0, sizeof(p->pstack));
     p->pstate = READY;
     
@@ -70,29 +66,22 @@ pcb *spawn_proc(uint32_t image, uint32_t imagesize) {
     sp--;
     if (image == (uint32_t)NULL && imagesize == 0) {
         // PID 0: idle proces, geen user mode
-        k_printf("PID %d: Setting kernel_main as entrypoint\n", p->pid);
         *sp = (uint32_t)kernel_main;
     } else {
         // User mode proces: gebruik switch_umode hier wel
-        k_printf("PID %d: Setting switch_umode as entrypoint\n", p->pid);
         *sp = (uint32_t)switch_umode;
     }
     
     p->psp = (uint32_t)(uintptr_t)sp;
-    k_printf("PID %d: PSP set to %p\n", p->pid, p->psp);
     
     // 4. Maak Page Directory aan en page het GEHELE kernel-proces
-    k_printf("PID %d: Allocating page directory\n", p->pid);
     p->pdbr = (uint32_t *)pageframalloc(1);
     if (!p->pdbr) {
         k_panic("Failed to allocate PDBR for process\n", "");
         return NULL;
     }
-    k_printf("PID %d: PDBR allocated at %p\n", p->pid, p->pdbr);
     
     // Map kernel memory (identity mapping: VPA = PFA)
-    k_printf("PID %d: Mapping kernel memory from %p to %p\n", 
-             p->pid, (uint32_t)__kernel_base, (uint32_t)__free_ram_end);
     
     uint32_t page_count = 0;
     for (uint32_t pfa = (uint32_t)__kernel_base; 
@@ -101,11 +90,9 @@ pcb *spawn_proc(uint32_t image, uint32_t imagesize) {
         add_ptbl_entry(p->pdbr, pfa, pfa, PTE_FLG_R | PTE_FLG_W | PTE_FLG_X);
         page_count++;
     }
-    k_printf("PID %d: Mapped %d kernel pages\n", p->pid, page_count);
     
     // 5. NIEUWE STAP: Alloceer, kopiëer EN page het GEHELE user-proces
     if (image != (uint32_t)NULL && imagesize > 0) {
-        k_printf("PID %d: Loading user binary (size=%d bytes)\n", p->pid, imagesize);
         
         uint32_t pages_allocated = 0;
         for (uint32_t bytecount = 0; bytecount < imagesize; bytecount += PAGEFRAMESIZE) {
@@ -132,12 +119,7 @@ pcb *spawn_proc(uint32_t image, uint32_t imagesize) {
                           PTE_FLG_U | PTE_FLG_R | PTE_FLG_W | PTE_FLG_X);
             pages_allocated++;
         }
-        k_printf("PID %d: Allocated and mapped %d user pages starting at %p\n", 
-                 p->pid, pages_allocated, USR_BASE_VA);
-    } else {
-        k_printf("PID %d: No user binary to load (idle process)\n", p->pid);
-    }
-    
-    k_printf("PID %d: Process spawned successfully!\n", p->pid);
+
+    } 
     return p;
 }
