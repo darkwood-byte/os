@@ -31,4 +31,18 @@ uint32_t read_socket(uint32_t socket_id, uint32_t byte);
 
 void write_socket(uint32_t socket_id, uint32_t byte, uint32_t data);
 
+//claiming
+uint32_t claim_rsocket(uint32_t rsocket_id, uint32_t id);
+
+uint32_t claim_socket(uint32_t socket_id, uint32_t id);
+
+void unclaim_rsocket(uint32_t rsocket_id);
+
+void unclaim_socket(uint32_t socket_id);
+
+//info
+uint32_t info_rsocket(uint32_t rsocket_id);
+
+uint32_t info_socket(uint32_t socket_id);
+
 #endif

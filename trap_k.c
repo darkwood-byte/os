@@ -10,6 +10,14 @@
 #define SYSCALL_SR_WRITE 0x08
 #define SYSCALL_S_READ 0x0A
 #define SYSCALL_S_WRITE 0x0B
+#define SYSCALL_SR_CLAIM 0x0C
+#define SYSCALL_SR_UNCLAIM 0x0D
+#define SYSCALL_S_CLAIM 0x0E
+#define SYSCALL_S_UNCLAIM 0x0F
+#define SYSCALL_SR_INFO 0x10
+#define SYSCALL_S_INFO 0x11
+#define SYSCALL_SR_FIND 0x12
+#define SYSCALL_S_FIND 0x13
 
 void handle_syscall(trap_frame *tf) {
     uint32_t syscall_num = tf->a3;
@@ -72,7 +80,30 @@ void handle_syscall(trap_frame *tf) {
         case SYSCALL_S_WRITE:  
             write_socket(arg0, arg1, arg2);
             break;
-
+        case SYSCALL_SR_CLAIM:  
+            claim_rsocket(arg0, arg1);
+            break;
+        case SYSCALL_S_CLAIM:  
+            claim_socket(arg0, arg1);
+            break;
+        case SYSCALL_SR_UNCLAIM:  
+            unclaim_rsocket(arg0);
+            break;
+        case SYSCALL_S_UNCLAIM:  
+            unclaim_socket(arg0);
+            break;
+         case SYSCALL_SR_INFO:  
+            tf->a0 = info_rsocket(arg0);
+            break;
+        case SYSCALL_S_INFO:  
+            tf->a0 = info_socket(arg0);
+            break;
+        case SYSCALL_SR_FIND:  
+            tf->a0 = info_rsocket(arg0);
+            break;
+        case SYSCALL_S_FIND:  
+            tf->a0 = info_socket(arg0);
+            break;
         default:
             k_printf("Unknown syscall: %d\n", syscall_num);
             tf->a0 = 0xFFFFFFFF;;
