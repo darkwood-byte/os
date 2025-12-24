@@ -7,7 +7,7 @@
 #include "memory.h"
 #include "csr.h"
 
-#define MAXPROCS 4
+#define MAXPROCS 40
 
 typedef enum {
     NOPROC,

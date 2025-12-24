@@ -25,7 +25,9 @@ void kernel_bootstrap(void){
 }
 
 
-
+//init 
+extern char _binary_init_bin_start[];
+extern char _binary_init_bin_size[];
 
 //besh
 extern char _binary_besh_bin_start[];
@@ -33,8 +35,8 @@ extern char _binary_besh_bin_size[];
 
 void kernel_main(void) {
     kernel_bootstrap();
-    
-    start_app( init_app("besh", _binary_besh_bin_start, _binary_besh_bin_size));//besh: beun essisenseel shell huls
+    start_app(init_app("init",_binary_init_bin_start,_binary_init_bin_size));
+    init_app("besh", _binary_besh_bin_start, _binary_besh_bin_size);
 
     yield();
     

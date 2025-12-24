@@ -19,6 +19,8 @@
 #define SYSCALL_SR_FIND 0x12
 #define SYSCALL_S_FIND 0x13
 
+#include "program_k.h"
+
 void handle_syscall(trap_frame *tf) {
     uint32_t syscall_num = tf->a3;
     uint32_t arg0 = tf->a0;
@@ -36,8 +38,7 @@ void handle_syscall(trap_frame *tf) {
             break;
 
         case SYSCALL_EXIT:
-            free_proc(currproc);
-            currproc->pstate = BLOCKED;;
+            currproc->pstate = BLOCKED;
             yield();
             break;
 
