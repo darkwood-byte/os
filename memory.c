@@ -133,8 +133,6 @@ void free_proc_pages(uint32_t *pdbr) {
         return;
     }
     
-    extern char __kernel_base[];
-    extern char __free_ram_end[];
     uint32_t kernel_start = (uint32_t)__kernel_base;
     uint32_t kernel_end = (uint32_t)__free_ram_start;
     

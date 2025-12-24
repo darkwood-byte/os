@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "panic_k.h"
+#include "program_k.h"
 
 #define MAX_RSOCKETS 10
 #define MAX_SOCKETS 10
