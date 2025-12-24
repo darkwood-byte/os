@@ -1427,38 +1427,38 @@
 80202680 80202680        0     1                 .LJTI2_0
 802026d8 802026d8       4c     4         build/trap_k.o:(.rodata)
 802026d8 802026d8        0     1                 .LJTI0_0
-80202724 80202724    10a50     4 .data
-80202724 80202724     88b0     1         bronx.o:(.data)
+80202724 80202724    10e00     4 .data
+80202724 80202724     8c60     1         bronx.o:(.data)
 80202724 80202724        0     1                 _binary_bronx_bin_start
-8020afd4 8020afd4        0     1                 _binary_bronx_bin_end
-8020afd4 8020afd4     81a0     1         init.o:(.data)
-8020afd4 8020afd4        0     1                 _binary_init_bin_start
-80213174 80213174        0     1                 _binary_init_bin_end
-80213174 80213174     cc70     4 .bss
-80213174 80213174        0     1         __bss = .
-80213174 80213174        8     4         build/memory.o:(.sbss)
-80213174 80213174        4     1                 nextfreepageframe
-80213178 80213178        4     1                 free_list_head
-8021317c 8021317c        8     4         build/pcb_k.o:(.sbss)
-8021317c 8021317c        4     1                 currproc
-80213180 80213180        4     1                 idleproc
-80213184 80213184     a320     4         build/pcb_k.o:(.bss)
-80213184 80213184     a320     1                 proclist
-8021d4a4 8021d4a4       c8     4         build/app.o:(.bss)
-8021d4a4 8021d4a4       c8     1                 app_list
-8021d56c 8021d56c     2878     4         build/sockets.o:(.bss)
-8021d56c 8021d56c       28     1                 rsockets
-8021d594 8021d594       28     1                 rsocket_info
-8021d5bc 8021d5bc     2800     1                 sockets
-8021fdbc 8021fdbc       28     1                 socket_info
-8021fde4 8021fde4        0     1         __bss_end = .
-8021fde4 8021fde4        0     1 . = ALIGN ( 4 )
-8021fde4 8021fde4    20000     1 . += 128 * 1024
-8023fde4 8023fde4        0     1 __stack_top = .
-8023fde4 8023fde4      21c     1 . = ALIGN ( 4096 )
-80240000 80240000        0     1 __free_ram_start = .
-80240000 80240000  2000000     1 . += 32 * 1024 * 1024
-82240000 82240000        0     1 __free_ram_end = .
+8020b384 8020b384        0     1                 _binary_bronx_bin_end
+8020b384 8020b384     81a0     1         init.o:(.data)
+8020b384 8020b384        0     1                 _binary_init_bin_start
+80213524 80213524        0     1                 _binary_init_bin_end
+80213524 80213524     cc70     4 .bss
+80213524 80213524        0     1         __bss = .
+80213524 80213524        8     4         build/memory.o:(.sbss)
+80213524 80213524        4     1                 nextfreepageframe
+80213528 80213528        4     1                 free_list_head
+8021352c 8021352c        8     4         build/pcb_k.o:(.sbss)
+8021352c 8021352c        4     1                 currproc
+80213530 80213530        4     1                 idleproc
+80213534 80213534     a320     4         build/pcb_k.o:(.bss)
+80213534 80213534     a320     1                 proclist
+8021d854 8021d854       c8     4         build/app.o:(.bss)
+8021d854 8021d854       c8     1                 app_list
+8021d91c 8021d91c     2878     4         build/sockets.o:(.bss)
+8021d91c 8021d91c       28     1                 rsockets
+8021d944 8021d944       28     1                 rsocket_info
+8021d96c 8021d96c     2800     1                 sockets
+8022016c 8022016c       28     1                 socket_info
+80220194 80220194        0     1         __bss_end = .
+80220194 80220194        0     1 . = ALIGN ( 4 )
+80220194 80220194    20000     1 . += 128 * 1024
+80240194 80240194        0     1 __stack_top = .
+80240194 80240194      e6c     1 . = ALIGN ( 4096 )
+80241000 80241000        0     1 __free_ram_start = .
+80241000 80241000  2000000     1 . += 32 * 1024 * 1024
+82241000 82241000        0     1 __free_ram_end = .
        0        0      ee6     1 .debug_abbrev
        0        0      115     1         build/main.o:(.debug_abbrev)
      115      115      104     1         build/print_k.o:(.debug_abbrev)
