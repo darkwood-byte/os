@@ -64,16 +64,32 @@ void unclaim_socket(uint32_t socket_id){
     rsocket_info[socket_id].bound = 0;
 }
 
-uint32_t find_free_rsocket(void){
-    for (uint32_t i = 0; i < MAX_RSOCKETS; i++){
-        if(rsocket_info[i].bound == 0)return i;
+uint32_t find_free_rsocket(uint32_t flag_id){
+    if (flag_id == 0){
+        for (uint32_t i = 0; i < MAX_RSOCKETS; i++){
+            if(rsocket_info[i].bound == 0)return i;
+        }
+        return 0xFFFFFFFF;//could not find
+    }
+    else{
+        for (uint32_t i = 0; i < MAX_RSOCKETS; i++){
+            if(rsocket_info[i].bound == flag_id)return i;
+        }
     }
     k_panic("no free rsockets left to claim, max rsockets: %d\n", MAX_RSOCKETS);
 }
 
-uint32_t find_free_socket(void){
-    for (uint32_t i = 0; i < MAX_SOCKETS; i++){
-        if(socket_info[i].bound == 0)return i;
+uint32_t find_free_socket(uint32_t flag_id){
+    if (flag_id == 0){
+        for (uint32_t i = 0; i < MAX_SOCKETS; i++){
+            if(socket_info[i].bound == 0)return i;
+        }
+        return 0xFFFFFFFF;//could not find
+    }
+    else{
+        for (uint32_t i = 0; i < MAX_SOCKETS; i++){
+            if(socket_info[i].bound == flag_id)return i;
+        }
     }
     k_panic("no free sockets left to claim, max sockets: %d\n", MAX_RSOCKETS);
 }

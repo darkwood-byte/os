@@ -99,10 +99,10 @@ void handle_syscall(trap_frame *tf) {
             tf->a0 = info_socket(arg0);
             break;
         case SYSCALL_SR_FIND:  
-            tf->a0 = info_rsocket(arg0);
+            tf->a0 = find_free_rsocket(arg0);
             break;
         case SYSCALL_S_FIND:  
-            tf->a0 = info_socket(arg0);
+            tf->a0 = find_free_socket(arg0);
             break;
         default:
             k_printf("Unknown syscall: %d\n", syscall_num);

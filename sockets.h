@@ -45,4 +45,9 @@ uint32_t info_rsocket(uint32_t rsocket_id);
 
 uint32_t info_socket(uint32_t socket_id);
 
+//finding
+uint32_t find_free_rsocket(uint32_t flag_id);
+
+uint32_t find_free_socket(uint32_t flag_id);
+
 #endif
