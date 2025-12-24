@@ -8,14 +8,17 @@
 #define SYSCALL_START 0x06
 #define SYSCALL_SR_READ 0x07
 #define SYSCALL_SR_WRITE 0x08
+#define SYSCALL_S_READ 0x0A
+#define SYSCALL_S_WRITE 0x0B
 
 void handle_syscall(trap_frame *tf) {
-    uint32_t syscall_num = tf->a3;  // Syscall nummer staat in a3 volgens je wrapper
+    uint32_t syscall_num = tf->a3;  // Syscall nummer
     uint32_t arg0 = tf->a0;
     uint32_t arg1 = tf->a1;
     uint32_t arg2 = tf->a2;
     
     switch(syscall_num) {
+        //writing
         case SYSCALL_PUTCHAR:
             k_putchar((char)arg0);
             tf->a0 = 0;  // Return value
@@ -24,7 +27,7 @@ void handle_syscall(trap_frame *tf) {
         case SYSCALL_GETCHAR:
             tf->a0 = k_readchar();
             break;
-            
+        //apps
         case SYSCALL_EXIT:
             currproc->pstate = BLOCKED;
             yield();
@@ -39,7 +42,7 @@ void handle_syscall(trap_frame *tf) {
                 yield();
             }
             else{
-                if (arg0 > MAXPROCS)k_panic("system call tried to call non vail proces id: %d\n", arg0);
+                if (arg0 > MAXPROCS)k_panic("system call tried to call non valid proces id: %d\n", arg0);
                 if(proclist[arg0].parent_id == 0 && currproc->parent_id != 0)k_panic("can't stop a root program from non root program id: \n", arg0);//0 means that the kernel made the program
                 else proclist[arg0].pstate = NOPROC;
             }
@@ -47,14 +50,25 @@ void handle_syscall(trap_frame *tf) {
         case SYSCALL_START:  
             tf->a0 = start_app(arg0);
             break;
-            
+        //sockets
+        case SYSCALL_SR_READ:  
+            tf->a0 = read_rsocket(arg0);
+            break;
+        case SYSCALL_SR_WRITE:  
+            write_rsocket(arg0, arg1);
+            break;
+        case SYSCALL_S_READ:  
+            tf->a0 = read_socket(arg0, arg1);
+            break;
+        case SYSCALL_S_WRITE:  
+            write_socket(arg0, arg1, arg2);
+            break;
+        //errors
         default:
             k_printf("Unknown syscall: %d\n", syscall_num);
             tf->a0 = 0xFFFFFFFF;;  // Error return
             break;
     }
-    (void)arg1;
-    (void)arg2;
 }
 
 void handle_trap(trap_frame *tf) {
