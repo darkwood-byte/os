@@ -1,7 +1,7 @@
      VMA      LMA     Size Align Out     In      Symbol
        0        0 80200000     1 . = 0x80200000
 80200000        0        0     1 __kernel_base = .
-80200000 80200000     1472     4 .text
+80200000 80200000     15c4     4 .text
 80200000 80200000        e     2         build/main.o:(.text.boot)
 80200000 80200000        0     1                 
 80200000 80200000        0     1                 
@@ -950,38 +950,110 @@
 80201470 80201470        0     1                 
 80201472 80201472        0     1                 
 80201472 80201472        0     1                 
-80201474 80201474      688     4 .rodata
-80201474 80201474      5be     1         <internal>:(.rodata)
-80201a34 80201a34       58     4         build/print_k.o:(.rodata)
-80201a34 80201a34        0     1                 .LJTI0_0
-80201a8c 80201a8c       58     4         build/str.o:(.rodata)
-80201a8c 80201a8c        0     1                 .LJTI2_0
-80201ae4 80201ae4       18     4         build/trap_k.o:(.rodata)
-80201ae4 80201ae4        0     1                 .LJTI0_0
-80201afc 80201afc     8120     4 .data
-80201afc 80201afc     8120     1         besh.bin.o:(.data)
-80201afc 80201afc        0     1                 _binary_besh_bin_start
-80209c1c 80209c1c        0     1                 _binary_besh_bin_end
-80209c1c 80209c1c     1124     4 .bss
-80209c1c 80209c1c        0     1         __bss = .
-80209c1c 80209c1c        4     4         build/memory.o:(.sbss)
-80209c1c 80209c1c        4     1                 nextfreepageframe
-80209c20 80209c20        8     4         build/pcb_k.o:(.sbss)
-80209c20 80209c20        4     1                 currproc
-80209c24 80209c24        4     1                 idleproc
-80209c28 80209c28     1050     4         build/pcb_k.o:(.bss)
-80209c28 80209c28     1050     1                 proclist
-8020ac78 8020ac78       c8     4         build/app.o:(.bss)
-8020ac78 8020ac78       c8     1                 app_list
-8020ad40 8020ad40        0     1         __bss_end = .
-8020ad40 8020ad40        0     1 . = ALIGN ( 4 )
-8020ad40 8020ad40    20000     1 . += 128 * 1024
-8022ad40 8022ad40        0     1 __stack_top = .
-8022ad40 8022ad40      2c0     1 . = ALIGN ( 4096 )
-8022b000 8022b000        0     1 __free_ram_start = .
-8022b000 8022b000  2000000     1 . += 32 * 1024 * 1024
-8222b000 8222b000        0     1 __free_ram_end = .
-       0        0      d2a     1 .debug_abbrev
+80201474 80201474      150     4         build/sockets.o:(.text)
+80201474 80201474        0     1                 
+80201474 80201474        0     1                 
+80201474 80201474        0     1                 
+80201474 80201474       3e     1                 read_rsocket
+80201476 80201476        0     1                 
+80201478 80201478        0     1                 
+8020147c 8020147c        0     1                 
+80201480 80201480        0     1                 
+8020149a 8020149a        0     1                 
+8020149c 8020149c        0     1                 
+802014ac 802014ac        0     1                 
+802014b2 802014b2        0     1                 
+802014b2 802014b2        0     1                 
+802014b2 802014b2        0     1                 
+802014b2 802014b2        0     1                 
+802014b2 802014b2        0     1                 
+802014b2 802014b2       3e     1                 write_rsocket
+802014b4 802014b4        0     1                 
+802014b6 802014b6        0     1                 
+802014ba 802014ba        0     1                 
+802014be 802014be        0     1                 
+802014d8 802014d8        0     1                 
+802014da 802014da        0     1                 
+802014e8 802014e8        0     1                 
+802014ea 802014ea        0     1                 
+802014f0 802014f0        0     1                 
+802014f0 802014f0        0     1                 
+802014f0 802014f0        0     1                 
+802014f0 802014f0        0     1                 
+802014f0 802014f0        0     1                 
+802014f0 802014f0       6a     1                 read_socket
+802014f2 802014f2        0     1                 
+802014f4 802014f4        0     1                 
+802014f8 802014f8        0     1                 
+802014fc 802014fc        0     1                 
+80201518 80201518        0     1                 
+8020151a 8020151a        0     1                 
+80201520 80201520        0     1                 
+80201524 80201524        0     1                 
+8020153e 8020153e        0     1                 
+80201540 80201540        0     1                 
+80201544 80201544        0     1                 
+80201546 80201546        0     1                 
+80201554 80201554        0     1                 
+8020155a 8020155a        0     1                 
+8020155a 8020155a        0     1                 
+8020155a 8020155a        0     1                 
+8020155a 8020155a        0     1                 
+8020155a 8020155a        0     1                 
+8020155a 8020155a       6a     1                 write_socket
+8020155c 8020155c        0     1                 
+8020155e 8020155e        0     1                 
+80201562 80201562        0     1                 
+80201566 80201566        0     1                 
+80201582 80201582        0     1                 
+80201584 80201584        0     1                 
+8020158a 8020158a        0     1                 
+8020158e 8020158e        0     1                 
+802015a8 802015a8        0     1                 
+802015aa 802015aa        0     1                 
+802015ae 802015ae        0     1                 
+802015b0 802015b0        0     1                 
+802015bc 802015bc        0     1                 
+802015be 802015be        0     1                 
+802015c4 802015c4        0     1                 
+802015c4 802015c4        0     1                 
+802015c4 802015c4      7fc     4 .rodata
+802015c4 802015c4      732     1         <internal>:(.rodata)
+80201cf8 80201cf8       58     4         build/print_k.o:(.rodata)
+80201cf8 80201cf8        0     1                 .LJTI0_0
+80201d50 80201d50       58     4         build/str.o:(.rodata)
+80201d50 80201d50        0     1                 .LJTI2_0
+80201da8 80201da8       18     4         build/trap_k.o:(.rodata)
+80201da8 80201da8        0     1                 .LJTI0_0
+80201dc0 80201dc0     8120     4 .data
+80201dc0 80201dc0     8120     1         besh.bin.o:(.data)
+80201dc0 80201dc0        0     1                 _binary_besh_bin_start
+80209ee0 80209ee0        0     1                 _binary_besh_bin_end
+80209ee0 80209ee0     399c     4 .bss
+80209ee0 80209ee0        0     1         __bss = .
+80209ee0 80209ee0        4     4         build/memory.o:(.sbss)
+80209ee0 80209ee0        4     1                 nextfreepageframe
+80209ee4 80209ee4        8     4         build/pcb_k.o:(.sbss)
+80209ee4 80209ee4        4     1                 currproc
+80209ee8 80209ee8        4     1                 idleproc
+80209eec 80209eec     1050     4         build/pcb_k.o:(.bss)
+80209eec 80209eec     1050     1                 proclist
+8020af3c 8020af3c       c8     4         build/app.o:(.bss)
+8020af3c 8020af3c       c8     1                 app_list
+8020b004 8020b004     2878     4         build/sockets.o:(.bss)
+8020b004 8020b004       28     1                 rsockets
+8020b02c 8020b02c       28     1                 rsocket_info
+8020b054 8020b054     2800     1                 sockets
+8020d854 8020d854       28     1                 socket_info
+8020d87c 8020d87c        0     1         __bss_end = .
+8020d87c 8020d87c        0     1 . = ALIGN ( 4 )
+8020d87c 8020d87c    20000     1 . += 128 * 1024
+8022d87c 8022d87c        0     1 __stack_top = .
+8022d87c 8022d87c      784     1 . = ALIGN ( 4096 )
+8022e000 8022e000        0     1 __free_ram_start = .
+8022e000 8022e000  2000000     1 . += 32 * 1024 * 1024
+8222e000 8222e000        0     1 __free_ram_end = .
+       0        0      e1f     1 .debug_abbrev
        0        0      115     1         build/main.o:(.debug_abbrev)
      115      115      104     1         build/print_k.o:(.debug_abbrev)
      219      219      15a     1         build/SBI.o:(.debug_abbrev)
@@ -993,7 +1065,8 @@
      93e      93e      156     1         build/pcb_k.o:(.debug_abbrev)
      a94      a94      163     1         build/program_k.o:(.debug_abbrev)
      bf7      bf7      133     1         build/app.o:(.debug_abbrev)
-       0        0     1567     1 .debug_info
+     d2a      d2a       f5     1         build/sockets.o:(.debug_abbrev)
+       0        0     16ea     1 .debug_info
        0        0      1b9     1         build/main.o:(.debug_info)
      1b9      1b9      1e5     1         build/print_k.o:(.debug_info)
      39e      39e      242     1         build/SBI.o:(.debug_info)
@@ -1005,6 +1078,7 @@
      f23      f23      26b     1         build/pcb_k.o:(.debug_info)
     118e     118e      21e     1         build/program_k.o:(.debug_info)
     13ac     13ac      1bb     1         build/app.o:(.debug_info)
+    1567     1567      183     1         build/sockets.o:(.debug_info)
        0        0      185     1 .debug_rnglists
        0        0       18     1         build/main.o:(.debug_rnglists)
        c        c        0     1                 
@@ -1020,7 +1094,7 @@
      157      157        0     1                 
      16b      16b       1a     1         build/app.o:(.debug_rnglists)
      177      177        0     1                 
-       0        0      674     1 .debug_str_offsets
+       0        0      6e4     1 .debug_str_offsets
        0        0       88     1         build/main.o:(.debug_str_offsets)
        8        8        0     1                 
       88       88       68     1         build/print_k.o:(.debug_str_offsets)
@@ -1043,9 +1117,11 @@
      554      554        0     1                 
      5e4      5e4       90     1         build/app.o:(.debug_str_offsets)
      5ec      5ec        0     1                 
-       0        0      603     1 .debug_str
-       0        0      603     1         <internal>:(.debug_str)
-       0        0      270     1 .debug_addr
+     674      674       70     1         build/sockets.o:(.debug_str_offsets)
+     67c      67c        0     1                 
+       0        0      699     1 .debug_str
+       0        0      699     1         <internal>:(.debug_str)
+       0        0      2b0     1 .debug_addr
        0        0       50     1         build/main.o:(.debug_addr)
        8        8        0     1                 
       50       50       50     1         build/print_k.o:(.debug_addr)
@@ -1068,11 +1144,13 @@
      1f8      1f8        0     1                 
      24c      24c       24     1         build/app.o:(.debug_addr)
      254      254        0     1                 
+     270      270       40     1         build/sockets.o:(.debug_addr)
+     278      278        0     1                 
        0        0       42     1 .comment
        0        0       42     1         <internal>:(.comment)
        0        0       2b     1 .riscv.attributes
        0        0       2b     1         build/main.o:(.riscv.attributes)
-       0        0      364     4 .debug_frame
+       0        0      3d8     4 .debug_frame
        0        0       54     4         build/main.o:(.debug_frame)
        0        0        0     1                 
       54       54       44     4         build/print_k.o:(.debug_frame)
@@ -1095,7 +1173,9 @@
      2c0      2c0        0     1                 
      31c      31c       48     4         build/app.o:(.debug_frame)
      31c      31c        0     1                 
-       0        0     1af3     1 .debug_line
+     364      364       74     4         build/sockets.o:(.debug_frame)
+     364      364        0     1                 
+       0        0     1c95     1 .debug_line
        0        0      1a1     1         build/main.o:(.debug_line)
        0        0        0     1                 .Lline_table_start0
      1a1      1a1      2d0     1         build/print_k.o:(.debug_line)
@@ -1118,9 +1198,11 @@
     1479     1479        0     1                 .Lline_table_start0
     186a     186a      289     1         build/app.o:(.debug_line)
     186a     186a        0     1                 .Lline_table_start0
-       0        0       ce     1 .debug_line_str
-       0        0       ce     1         <internal>:(.debug_line_str)
-       0        0      e64     1 .debug_loclists
+    1af3     1af3      1a2     1         build/sockets.o:(.debug_line)
+    1af3     1af3        0     1                 .Lline_table_start0
+       0        0       e2     1 .debug_line_str
+       0        0       e2     1         <internal>:(.debug_line_str)
+       0        0      f43     1 .debug_loclists
        0        0      115     1         build/print_k.o:(.debug_loclists)
        c        c        0     1                 
      115      115       9f     1         build/SBI.o:(.debug_loclists)
@@ -1141,9 +1223,11 @@
      870      870        0     1                 
      98f      98f      4d5     1         build/app.o:(.debug_loclists)
      99b      99b        0     1                 
-       0        0     5890     4 .symtab
-       0        0     5890     4         <internal>:(.symtab)
+     e64      e64       df     1         build/sockets.o:(.debug_loclists)
+     e70      e70        0     1                 
+       0        0     5ef0     4 .symtab
+       0        0     5ef0     4         <internal>:(.symtab)
        0        0       dc     1 .shstrtab
        0        0       dc     1         <internal>:(.shstrtab)
-       0        0      3d7     1 .strtab
-       0        0      3d7     1         <internal>:(.strtab)
+       0        0      453     1 .strtab
+       0        0      453     1         <internal>:(.strtab)

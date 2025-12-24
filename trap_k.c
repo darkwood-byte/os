@@ -6,6 +6,8 @@
 #define SYSCALL_YIELD    0x04
 #define SYSCALL_KILL 0x05
 #define SYSCALL_START 0x06
+#define SYSCALL_SR_READ 0x07
+#define SYSCALL_SR_WRITE 0x08
 
 void handle_syscall(trap_frame *tf) {
     uint32_t syscall_num = tf->a3;  // Syscall nummer staat in a3 volgens je wrapper
