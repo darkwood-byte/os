@@ -18,8 +18,18 @@
 #define SYSCALL_S_INFO 0x11
 #define SYSCALL_SR_FIND 0x12
 #define SYSCALL_S_FIND 0x13
+#define SYSCALL_GET_APP_NAME 0x14
+#define SYSCALL_GET_APP_ID 0x15
 
 #include "program_k.h"
+
+static void uint32_to_chars(uint32_t value, char buffer[5]) {
+    buffer[0] = (char)((value >> 24) & 0xFF);
+    buffer[1] = (char)((value >> 16) & 0xFF);
+    buffer[2] = (char)((value >> 8) & 0xFF);
+    buffer[3] = (char)(value & 0xFF);
+    buffer[4] = '\0';
+}
 
 void handle_syscall(trap_frame *tf) {
     uint32_t syscall_num = tf->a3;
@@ -104,6 +114,14 @@ void handle_syscall(trap_frame *tf) {
             break;
         case SYSCALL_S_FIND:  
             tf->a0 = find_free_socket(arg0);
+            break;
+        case SYSCALL_GET_APP_ID: { 
+            char temp[5] = {' '};
+            uint32_to_chars(arg0, temp);
+            tf->a0 = get_app_id(temp);
+            break;}
+        case SYSCALL_GET_APP_NAME:  
+            tf->a0 = get_app_name(arg0);
             break;
         default:
             k_printf("Unknown syscall: %d\n", syscall_num);
