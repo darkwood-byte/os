@@ -1428,9 +1428,9 @@
 802026d8 802026d8       4c     4         build/trap_k.o:(.rodata)
 802026d8 802026d8        0     1                 .LJTI0_0
 80202724 80202724    10a50     4 .data
-80202724 80202724     88b0     1         besh.bin.o:(.data)
-80202724 80202724        0     1                 _binary_besh_bin_start
-8020afd4 8020afd4        0     1                 _binary_besh_bin_end
+80202724 80202724     88b0     1         bronx.o:(.data)
+80202724 80202724        0     1                 _binary_bronx_bin_start
+8020afd4 8020afd4        0     1                 _binary_bronx_bin_end
 8020afd4 8020afd4     81a0     1         init.o:(.data)
 8020afd4 8020afd4        0     1                 _binary_init_bin_start
 80213174 80213174        0     1                 _binary_init_bin_end
@@ -1637,5 +1637,5 @@
        0        0     7c10     4         <internal>:(.symtab)
        0        0       dc     1 .shstrtab
        0        0       dc     1         <internal>:(.shstrtab)
-       0        0      5b5     1 .strtab
-       0        0      5b5     1         <internal>:(.strtab)
+       0        0      5b8     1 .strtab
+       0        0      5b8     1         <internal>:(.strtab)

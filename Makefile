@@ -2,7 +2,7 @@ CC = clang
 TARGET = riscv32-unknown-elf
 OUTPUT = build/main.elf
 SOURCES = main.c print_k.c SBI.c mem.c str.c oa.c memory.c trap_k.c pcb_k.c program_k.c app.c sockets.c
-OBJECTS = $(SOURCES:%.c=build/%.o) besh.bin.o init.o
+OBJECTS = $(SOURCES:%.c=build/%.o) bronx.o init.o
 LINKER_SCRIPT = kernel.ld
 DEPFILES = $(SOURCES:%.c=build/%.d)
 HEADERS = main.h 
