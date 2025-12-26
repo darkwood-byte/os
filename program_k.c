@@ -1,4 +1,5 @@
 #include "program_k.h"
+#include "print_k.h"
 
 __attribute__((naked))
 void switch_proc(uint32_t *current_psp, uint32_t *next_psp) {
@@ -46,10 +47,31 @@ void switch_proc(uint32_t *current_psp, uint32_t *next_psp) {
 }
 
 void Flush_TLB(pcb* nextproc){
-    uint32_t pdbr_value = (uint32_t)(uintptr_t)nextproc->pdbr;
-    uint32_t ppn = (pdbr_value >> 12) & 0x003FFFFF;  // Extract PPN (bits 21:0)
-    uint32_t satp_value = SV32_MMU_ON | ppn;          // MODE=1 + PPN
-
+    // DEBUG: Check for NULL pointers
+    if (nextproc == NULL) {
+        k_panic("[DEBUG] Flush_TLB: NULL nextproc!\n", "");
+        return;
+    }
+    
+    // DEBUG: Check if pdbr is valid
+    if (nextproc->pdbr_phys == 0) {
+        k_panic("[DEBUG] Flush_TLB: PID %d has invalid pdbr_phys=0x%x!\n", 
+                nextproc->pid, nextproc->pdbr_phys);
+        return;
+    }
+    
+    // DEBUG: Log the switch
+    k_printf("[DEBUG] Flush_TLB: Switching to PID %d, pdbr_phys=0x%x, pdbr_virt=%p\n",
+             nextproc->pid, nextproc->pdbr_phys, nextproc->pdbr_virt);
+    
+    // Calculate SATP value - MUST use PHYSICAL address!
+    uint32_t ppn = PPN_FROM_PFA(nextproc->pdbr_phys);
+    uint32_t satp_value = SV32_MMU_ON | ppn;
+    
+    // DEBUG: Log SATP value
+    k_printf("[DEBUG] Flush_TLB: Setting SATP=0x%x (ppn=0x%x from phys 0x%x)\n", 
+             satp_value, ppn, nextproc->pdbr_phys);
+    
     __asm__ __volatile__(
         "csrw satp, %0\n"
         "sfence.vma\n"
@@ -58,16 +80,16 @@ void Flush_TLB(pcb* nextproc){
     );
 }
 
-void k_sp(void){//print de pcb status
+void k_sp(void){
     k_printf("\n====active pcb's====\n");
     for (uint32_t i = 0; i < MAXPROCS; i++){
         if(proclist[i].pstate == NOPROC){
             k_printf("p: %d :: does not exist\n", i);
         }
         else{
-            k_printf("p: %d :: state : %d  psp : %p\n", i, proclist[i].pstate, proclist[i].psp);
-            k_printf("&proclist[%d] = %p\n", i, &proclist[i]);
-
+            k_printf("p: %d :: state : %d  psp : %p  pdbr_phys: 0x%x  pdbr_virt: %p\n", 
+                     i, proclist[i].pstate, proclist[i].psp, 
+                     proclist[i].pdbr_phys, proclist[i].pdbr_virt);
         }
     }
     k_printf("\n====end of active pcb's====\n");
@@ -75,6 +97,9 @@ void k_sp(void){//print de pcb status
 
 void yield(void) {
     pcb *oldproc = currproc;
+    
+    // DEBUG: Log yield start
+    k_printf("[DEBUG] yield: Called from PID %d\n", oldproc ? oldproc->pid : -1);
     
     // Update state van huidig proces
     if (currproc && currproc->pstate == RUNNING) {
@@ -95,6 +120,7 @@ void yield(void) {
         
         if (proclist[check_pid].pstate == READY) {
             nextproc = &proclist[check_pid];
+            k_printf("[DEBUG] yield: Found READY process PID %d\n", check_pid);
             break;
         }
     }
@@ -102,19 +128,26 @@ void yield(void) {
     // Als niks gevonden, check of huidig proces zelf READY is
     if (!nextproc && currproc && currproc->pstate == READY) {
         nextproc = currproc;
+        k_printf("[DEBUG] yield: Reusing current process PID %d\n", currproc->pid);
     }
     
     // Als GEEN ENKEL proces READY is, val terug naar idle (PID 0) oftwel kernel
     if (!nextproc) {
         nextproc = idleproc;
+        k_printf("[DEBUG] yield: Falling back to idle (PID 0)\n");
     }
     
     // Als hetzelfde proces geen switch nodig anders super veel bugs
     if (nextproc == oldproc) {
+        k_printf("[DEBUG] yield: Same process, no switch needed\n");
         return;
     }
     
-    // NIEUW: Zet kernel stack pointer in sscratch voor nextproc (volgens lesdoc p15)
+    // DEBUG: Log the switch
+    k_printf("[DEBUG] yield: Switching from PID %d to PID %d\n", 
+             oldproc ? oldproc->pid : -1, nextproc->pid);
+    
+    // Zet kernel stack pointer in sscratch voor nextproc
     uint32_t kernel_stack_top = (uint32_t)&nextproc->pstack[sizeof(nextproc->pstack)];
     
     __asm__ __volatile__(
@@ -127,9 +160,13 @@ void yield(void) {
     currproc = nextproc;
     currproc->pstate = RUNNING;
     
-    // Flush TLB en set SATPset met nieuwe PDBR 
+    // Flush TLB en set SATP met nieuwe PDBR 
     Flush_TLB(nextproc);
     
+    // DEBUG: Before context switch
+    k_printf("[DEBUG] yield: Before switch - oldpsp=%p, newpsp=%p\n", 
+             oldproc ? oldproc->psp : 0, nextproc->psp);
+    
     // Context switch
-    switch_proc(&oldproc->psp, &nextproc->psp);
+    switch_proc(oldproc ? &oldproc->psp : NULL, &nextproc->psp);
 }

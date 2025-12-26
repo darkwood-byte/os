@@ -142,7 +142,7 @@ void handle_trap(trap_frame *tf) {
     else{
         k_printf("Unknow trap detected! scause=%x, stval=%x, sepc=%p\n", 
         csr_scause, csr_stval, csr_sepc);
-         k_printf("Trap remains unhandled as of now. Kernel might become wonky! Consida' yo'ass warn'd!\n");
+         k_panic("Trap remains unhandled as of now. Kernel might become wonky! Consida' yo'ass warn'd!\n", "");
     }
 
     csr_sepc += 4;

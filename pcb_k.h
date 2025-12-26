@@ -1,40 +1,33 @@
-#ifndef PCB_H
-#define PCB_H
+#ifndef PCB_K_H
+#define PCB_K_H
 
 #include "types.h"
-#include "deps.h"
-#include "trap_frame_k.h"
-#include "memory.h"
-#include "csr.h"
 
-#define MAXPROCS 40
+#define MAXPROCS 10
 
 typedef enum {
     NOPROC,
-    READY,
     RUNNING,
+    READY,
     BLOCKED
-} procstate;
+} pstate_t;
 
-typedef struct {
+// NO UNION - store separately
+typedef struct pcb {
     uint32_t pid;
     uint32_t parent_id;
-    procstate pstate;
-    uint32_t psp;
-    uint32_t *pdbr;
-    uint8_t pstack[1024];
+    pstate_t pstate;
+    uint32_t psp;           // Process stack pointer (kernel stack)
+    char pstack[8192];      // Kernel stack for this process
+    uint32_t pdbr_phys;     // Physical address of page directory (for SATP)
+    uint32_t *pdbr_virt;    // Virtual pointer to page directory (for kernel access)
 } pcb;
 
 extern pcb proclist[MAXPROCS];
-
 extern pcb *currproc;
-
 extern pcb *idleproc;
 
-pcb *spawn_proc(uint32_t  image, uint32_t imagesize);
-
-void switch_umode(void);
-
+pcb *spawn_proc(uint32_t image, uint32_t imagesize);
 void free_proc(pcb *p);
 
 #endif

@@ -4,11 +4,13 @@
 #include "deps.h"
 #include "pcb_k.h"
 
-void switch_proc(uint32_t *current_psp, uint32_t *next_psp) ;
+void switch_proc(uint32_t *current_psp, uint32_t *next_psp);
 
-void yield(void) ;
+void yield(void);
 
 void k_sp(void);
+
+void Flush_TLB(pcb* nextproc);
 
 #define start(id)do{\
     proclist[id].pstate = start;\
