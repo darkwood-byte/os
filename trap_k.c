@@ -82,6 +82,7 @@ void handle_syscall(trap_frame *tf) {
 
         case SYSCALL_SR_WRITE:  
             write_rsocket(arg0, arg1);
+            k_sp();
             break;
 
         case SYSCALL_S_READ:  
