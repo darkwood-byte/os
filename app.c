@@ -28,7 +28,7 @@ uint32_t get_app_id(char app_name[5]){
     for(uint32_t i = 0; i < MAX_APPS; i++){
         if(!k_strcmp(app_name, app_list[i].name))return i;
     }
-    k_panic("could not find %s in the app image list\n", app_name);
+    return 0xFFFFFFFF;
 }
 
 uint32_t get_app_name(uint32_t app_id){
