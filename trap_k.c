@@ -20,6 +20,7 @@
 #define SYSCALL_S_FIND 0x13
 #define SYSCALL_GET_APP_NAME 0x14
 #define SYSCALL_GET_APP_ID 0x15
+#define SYSCALL_SHUTDOWN 0x16
 
 #include "program_k.h"
 
@@ -122,6 +123,9 @@ void handle_syscall(trap_frame *tf) {
             break;}
         case SYSCALL_GET_APP_NAME:  
             tf->a0 = get_app_name(arg0);
+            break;
+         case SYSCALL_SHUTDOWN:  
+            exit(arg0);
             break;
         default:
             k_printf("Unknown syscall: %d\n", syscall_num);

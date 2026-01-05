@@ -13,16 +13,16 @@ void init_memory(void) {
 }
 
 pframe_addr_t pageframalloc(uint32_t numpages) {
-    if (numpages == 0) return 0;
+    if (numpages == 0) return 0;//niks
     
     if (numpages == 1 && free_list_head != NULL) {
         pframe_addr_t pfaddr = (pframe_addr_t)free_list_head;
         free_list_head = free_list_head->next;
         memset((void*)pfaddr, 0, PAGEFRAMESIZE);
-        return pfaddr;
+        return pfaddr;//enkele pagina
     }
     
-    if (numpages > 1 && free_list_head != NULL) {
+    if (numpages > 1 && free_list_head != NULL) {//meedre paginaas
         free_page_node_t *prev = NULL;
         free_page_node_t *curr = free_list_head;
         
@@ -69,7 +69,7 @@ pframe_addr_t pageframalloc(uint32_t numpages) {
 }
 
 void pageframfree(pframe_addr_t pfaddr, uint32_t numpages) {
-    if (pfaddr == 0 || numpages == 0) return;
+    if (pfaddr == 0 || numpages == 0) return;//geen
     
     if (!IS_PAGE_ALIGNED(pfaddr)) {
         k_panic("pageframfree: address not page aligned: %p\n", pfaddr);

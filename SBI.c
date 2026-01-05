@@ -5,7 +5,7 @@
 
 sbiret sbi_call(uint32_t arg0, uint32_t arg1, uint32_t arg2,
     uint32_t arg3, uint32_t arg4, uint32_t arg5,
-    uint32_t fid, uint32_t eid, char ch)
+    uint32_t fid, uint32_t eid)
 
 {
     sbiret ret;
@@ -29,19 +29,11 @@ sbiret sbi_call(uint32_t arg0, uint32_t arg1, uint32_t arg2,
         : "memory"
     );
 
-    __asm__ __volatile__(
-        "li a7, 1\n"
-        "ecall"
-        :
-        : "r"((uint32_t)ch)
-        : "a7", "memory"
-    );
-
     return ret;
 }
 
 void k_putchar(char ch) {
-    sbi_call(ch, 0, 0, 0, 0, 0, 0, 0x01, ch);
+    sbi_call(ch, 0, 0, 0, 0, 0, 0, 0x01);
 }
 
 char k_readchar(void)
@@ -63,7 +55,13 @@ char k_readchar(void)
 
     if (ch == 4)
     {
-        k_printf("\n------------------------\nGoodbye =]\n\n");
+        exit(4);
+    }
+    return (char)ch;
+}
+
+void exit(uint32_t code){
+     k_printf("\n------------------------\nGoodbye\nexit code: %d\n", code);
         __asm__ __volatile__(
             "li a7, 8\n"  // SBI shutdown
             "ecall\n"
@@ -72,8 +70,5 @@ char k_readchar(void)
             : "a7", "memory"
         );
         k_panic("\nSBI shutdown failed, check hardware....\n", "");
-    }
-    return (char)ch;
 }
-
 #endif
