@@ -33,14 +33,14 @@ extern char _binary_init_bin_size[];
 extern char _binary_bronx_bin_start[];
 extern char _binary_bronx_bin_size[];
 
-extern char _binary_test_bin_start[];
-extern char _binary_test_bin_size[];
+extern char _binary_snak_bin_start[];
+extern char _binary_snak_bin_size[];
 
 void kernel_main(void) {
     kernel_bootstrap();
     start_app(init_app("init",_binary_init_bin_start,_binary_init_bin_size));
     init_app("brox", _binary_bronx_bin_start, _binary_bronx_bin_size);
-    init_app("test", _binary_test_bin_start, _binary_test_bin_size);
+    init_app("snak", _binary_snak_bin_start, _binary_snak_bin_size);
 
     yield();
     

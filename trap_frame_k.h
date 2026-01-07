@@ -3,8 +3,6 @@
 
 #include "types.h"
 
-
-
 typedef uint32_t pframe_addr_t;
 
 typedef struct __attribute__((packed)) {

@@ -4,6 +4,8 @@
 #include "types.h"
 #include "panic_k.h"
 
+#define SBI_EXT_SYSTEM_RESET 0x53525354//"SRST" zie riskv docs voor systeem afsluiting
+
 typedef    struct    {
                 uint32_t    error;
                 uint32_t    value;
