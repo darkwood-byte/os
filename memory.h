@@ -19,8 +19,6 @@ void init_memory(void);
 
 pframe_addr_t pageframalloc(uint32_t numpages);
 
-void pageframfree(pframe_addr_t pfaddr, uint32_t numpages);
-
 void add_ptbl_entry(uint32_t *pdbr, uint32_t vpa, uint32_t pfa, uint32_t pteflags);
 
 void free_proc_pages(uint32_t *pdbr);

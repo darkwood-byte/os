@@ -5,90 +5,36 @@ extern char __free_ram_end[];
 extern char __kernel_base[];
 
 static pframe_addr_t nextfreepageframe = 0;
-static free_page_node_t *free_list_head = NULL;
 
 void init_memory(void) {
     nextfreepageframe = (pframe_addr_t)__free_ram_start;
-    free_list_head = NULL;
 }
 
 pframe_addr_t pageframalloc(uint32_t numpages) {
-    if (numpages == 0) return 0;//niks
-    
-    if (numpages == 1 && free_list_head != NULL) {
-        pframe_addr_t pfaddr = (pframe_addr_t)free_list_head;
-        free_list_head = free_list_head->next;
-        memset((void*)pfaddr, 0, PAGEFRAMESIZE);
-        return pfaddr;//enkele pagina
-    }
-    
-    if (numpages > 1 && free_list_head != NULL) {//meedre paginaas
-        free_page_node_t *prev = NULL;
-        free_page_node_t *curr = free_list_head;
-        
-        while (curr != NULL) {
-            pframe_addr_t start_addr = (pframe_addr_t)curr;
-            uint32_t found_count = 0;
-            free_page_node_t *check = curr;
-            
-            while (check != NULL && found_count < numpages) {
-                pframe_addr_t expected_addr = start_addr + (found_count * PAGEFRAMESIZE);
-                if ((pframe_addr_t)check != expected_addr) {
-                    break;
-                }
-                found_count++;
-                check = check->next;
-            }
-            
-            if (found_count == numpages) {
-                if (prev == NULL) {
-                    free_list_head = check;
-                } else {
-                    prev->next = check;
-                }
-                
-                memset((void*)start_addr, 0, numpages * PAGEFRAMESIZE);
-                return start_addr;
-            }
-            
-            prev = curr;
-            curr = curr->next;
-        }
-    }
-    
+    // Save the current address as the returnvalue
     pframe_addr_t pfaddr = nextfreepageframe;
+    
+    // Calculate size and increment the main pointer
     uint32_t allocation_size = numpages * PAGEFRAMESIZE;
     nextfreepageframe += allocation_size;
     
+    // Check for overflow
     if (nextfreepageframe > (pframe_addr_t)__free_ram_end) {
         k_panic("Out of memory! Geheugen vol koop een nuwe RAM, jonge!", "");
     }
     
+    // Zero all allocated page frames
     memset((void*)pfaddr, 0, allocation_size);
+    
+    // Return address of first page frame
     return pfaddr;
-}
-
-void pageframfree(pframe_addr_t pfaddr, uint32_t numpages) {
-    if (pfaddr == 0 || numpages == 0) return;//geen
-    
-    if (!IS_PAGE_ALIGNED(pfaddr)) {
-        k_panic("pageframfree: address not page aligned: %p\n", pfaddr);
-    }
-    
-    for (uint32_t i = 0; i < numpages; i++) {
-        pframe_addr_t page_addr = pfaddr + (i * PAGEFRAMESIZE);
-        
-        free_page_node_t *node = (free_page_node_t *)page_addr;
-        node->next = free_list_head;
-        free_list_head = node;
-    }
 }
 
 void add_ptbl_entry(uint32_t *pdbr, uint32_t vpa, uint32_t pfa, uint32_t pteflags) {
     if (!IS_PAGE_ALIGNED(vpa) || !IS_PAGE_ALIGNED(pfa)) {
         k_printf("ERROR: VPA of PFA not page aligned!\n");
         k_printf("VPA: %x", vpa);
-        k_printf(", PFA: %x, pfa");
+        k_printf(", PFA: %x", pfa);
         k_printf("\n");
         k_panic("Page alignment check failed", "");
     }
@@ -123,6 +69,7 @@ void add_ptbl_entry(uint32_t *pdbr, uint32_t vpa, uint32_t pfa, uint32_t pteflag
     uint32_t vpn0 = VPN0_FROM_VPA(vpa);
     uint32_t *sub_table = (uint32_t *)sptbr;
     uint32_t *pte_ptr = &sub_table[vpn0];
+    
     uint32_t target_ppn = PPN_FROM_PFA(pfa);
     uint32_t pte = (target_ppn << 10) | pteflags | PTE_FLG_V;
     *pte_ptr = pte;
@@ -138,7 +85,6 @@ void free_proc_pages(uint32_t *pdbr) {
     
     for (uint32_t vpn1 = 0; vpn1 < 1024; vpn1++) {
         uint32_t pde = pdbr[vpn1];
-        
         if (!PDE_IS_VALID(pde)) continue;
         
         uint32_t sub_table_ppn = PPN_FROM_ENTRY(pde);
@@ -147,9 +93,7 @@ void free_proc_pages(uint32_t *pdbr) {
         
         for (uint32_t vpn0 = 0; vpn0 < 1024; vpn0++) {
             uint32_t pte = sub_table[vpn0];
-            
             if (!(pte & PTE_FLG_V)) continue;
-            
             if (!(pte & PTE_FLG_U)) continue;
             
             uint32_t page_ppn = PPN_FROM_ENTRY(pte);
@@ -157,18 +101,20 @@ void free_proc_pages(uint32_t *pdbr) {
             
             if (page_pfa >= kernel_start && page_pfa < kernel_end) continue;
             
-            pageframfree(page_pfa, 1);
+            // Markeer page als invalid
+            sub_table[vpn0] = 0;
         }
         
         if (sub_table_pfa >= kernel_start && sub_table_pfa < kernel_end) continue;
         
-        pageframfree(sub_table_pfa, 1);
+        // Markeer sub-table als invalid
+        pdbr[vpn1] = 0;
     }
     
+    // PDBR zelf wordt niet vrijgegeven als het kernel geheugen is kenelijk
     uint32_t pdbr_pfa = (uint32_t)pdbr;
     if (pdbr_pfa >= kernel_start && pdbr_pfa < kernel_end) {
         return;
     }
     
-    pageframfree(pdbr_pfa, 1);
 }

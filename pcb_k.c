@@ -115,7 +115,6 @@ void free_proc(pcb *p) {
     if (p->pstate == NOPROC) return;
     
     if (p->pdbr != NULL) {
-        free_proc_pages(p->pdbr);
         p->pdbr = NULL;
     }
     

@@ -33,10 +33,11 @@ extern char _binary_init_bin_size[];
 extern char _binary_bronx_bin_start[];
 extern char _binary_bronx_bin_size[];
 
+//snak
 extern char _binary_snak_bin_start[];
 extern char _binary_snak_bin_size[];
 
-
+//test
 extern char _binary_test_bin_start[];
 extern char _binary_test_bin_size[];
 
