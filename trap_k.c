@@ -61,15 +61,14 @@ void handle_syscall(trap_frame *tf) {
 
         case SYSCALL_KILL:
             if(arg0 == 0 || arg0 == currproc->pid) {
-                free_proc(currproc);
-                currproc->pstate = NOPROC;
+                currproc->pstate = BLOCKED;
                 yield();
             } else {
                 if (arg0 > MAXPROCS) k_panic("system call tried to call non valid proces id: %d\n", arg0);
                 if(proclist[arg0].parent_id == 0 && currproc->parent_id != 0) {
                     k_panic("can't stop a root program from non root program id: \n", arg0);
                 } else {
-                    free_proc(&proclist[arg0]);
+                    proclist[arg0].pstate = BLOCKED;
                 }
             }
             break;
