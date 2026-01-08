@@ -46,7 +46,7 @@ void kernel_main(void) {
     init_app("brox", _binary_bronx_bin_start, _binary_bronx_bin_size);
     init_app("snak", _binary_snak_bin_start, _binary_snak_bin_size);
     init_app("test", _binary_test_bin_start, _binary_test_bin_size);
-    
+
     yield();
     
     k_panic("now in PID 0 (idlin') ...", "");
