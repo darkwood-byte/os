@@ -4,7 +4,7 @@ uint32_t rsockets[MAX_RSOCKETS] = {0};
 socket_data rsocket_info[MAX_RSOCKETS] = {0};
 
 uint32_t sockets[SOCKET_SIZE * MAX_SOCKETS] = {0};
-socket_data socket_info[MAX_RSOCKETS] = {0};
+socket_data socket_info[MAX_SOCKETS] = {0};
 
 uint32_t read_rsocket(uint32_t socket_id){
     if(socket_id >= MAX_RSOCKETS)k_panic("non vaild rsocket read, id: %d\n", socket_id);
@@ -60,7 +60,7 @@ void unclaim_rsocket(uint32_t rsocket_id){
 }
 
 void unclaim_socket(uint32_t socket_id){
-    if(socket_id >= MAX_RSOCKETS)k_panic("non vaild rsocket unclaim, id: %d\n", socket_id);
+    if(socket_id >= MAX_SOCKETS)k_panic("non vaild rsocket unclaim, id: %d\n", socket_id);
     rsocket_info[socket_id].bound = 0;
 }
 

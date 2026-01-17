@@ -101,17 +101,17 @@ void free_proc_pages(uint32_t *pdbr) {
             
             if (page_pfa >= kernel_start && page_pfa < kernel_end) continue;
             
-            // Markeer page als invalid
+            // markeer invalid
             sub_table[vpn0] = 0;
         }
         
         if (sub_table_pfa >= kernel_start && sub_table_pfa < kernel_end) continue;
         
-        // Markeer sub-table als invalid
+        // Markeer invalid
         pdbr[vpn1] = 0;
     }
     
-    // PDBR zelf wordt niet vrijgegeven als het kernel geheugen is kenelijk
+    // PDBR zelf wordt niet vrijgegeven bij kernel!!!!
     uint32_t pdbr_pfa = (uint32_t)pdbr;
     if (pdbr_pfa >= kernel_start && pdbr_pfa < kernel_end) {
         return;
