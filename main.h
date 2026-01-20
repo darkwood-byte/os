@@ -1,6 +1,8 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+//v27.9
+//https://github.com/darkwood-byte/os note: prod2 is the main branch!
 //deps
 #include "deps.h"
 

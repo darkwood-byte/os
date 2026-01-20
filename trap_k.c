@@ -61,7 +61,7 @@ void handle_syscall(trap_frame *tf) {
 
         case SYSCALL_KILL:
             if(arg0 == 0 || arg0 == currproc->pid) {
-                currproc->pstate = NOPROC;
+                currproc->pstate = BLOCKED;
                 yield();
             } else {
                 if (arg0 > MAXPROCS) k_panic("system call tried to call non valid proces id: %d\n", arg0);
