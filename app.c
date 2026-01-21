@@ -13,7 +13,11 @@ uint32_t init_app(char name[4], char start[], char size[]){
     new_app.size = (uint32_t)size;
 
     for(uint32_t i = 0; i < MAX_APPS; i++){
-        if (app_list[i].size == 0){app_list[i] = new_app; return i;}
+        if (app_list[i].size == 0){
+            app_list[i] = new_app; 
+            k_printf("New app registerd in slot %d, name: %s, start: %p, size: %d bytes\n", i, new_app.name, new_app.start, new_app.size);
+            return i;
+        }
     }
     k_panic("\nno free app slots found for %s\n", name);
 }

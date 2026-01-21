@@ -4,10 +4,15 @@ extern char __bss[], __bss_end[], __stack_top[];
 extern char __free_ram_start[], __free_ram_end[];
 extern char __kernel_base[];
 
-void kernel_bootstrap(void){
-    k_printf("\nBoot done. . .\n");
+#define __spawn_kernel() do{\
+    idleproc = spawn_proc((uint32_t)NULL, (uint32_t)NULL);\
+    currproc = idleproc;\
+}while(0)
 
-     k_printf("\n=== Kernel Boot ===\n");
+void kernel_bootstrap(void){
+    k_printf("\nSBI boot done. . .\n");
+
+    k_printf("\n=== Kernel Boot ===\n");
     memset(__bss, 0, ((size_t)__bss_end - (size_t)__bss));
     k_printf("BSS initialized\n");
     
@@ -15,16 +20,18 @@ void kernel_bootstrap(void){
     k_printf("Trap handler registered at: %p\n", (uint32_t)switch_trap);
 
     init_memory();
-    k_printf("Free RAM: %p - %p\n", (uint32_t)__free_ram_start, (uint32_t)__free_ram_end);
+    k_printf("Free RAM: %p - %p, size: %d megabytes\n", (uint32_t)__free_ram_start, (uint32_t)__free_ram_end, (uint32_t)((uint32_t)__free_ram_start- (uint32_t)__free_ram_end) / 1000000);
     
     k_printf("\nMaking kernel idle process pcb:\n\n");
-    idleproc = spawn_proc((uint32_t)NULL, (uint32_t)NULL);//kernel proc
-    currproc = idleproc;
-    
+
+   __spawn_kernel();
+
+    k_printf("Kernel: %p - %p , size: %d kilobytes\n", (uint32_t)__kernel_base,(uint32_t)__free_ram_start, (uint32_t)( (uint32_t)__free_ram_start -(uint32_t)__kernel_base) / 1000);
+
     k_printf("\nKernel Boot done. . .\n");
 }
 
-
+//===============apps===============
 //init 
 extern char _binary_init_bin_start[];
 extern char _binary_init_bin_size[];
@@ -43,10 +50,14 @@ extern char _binary_test_bin_size[];
 
 void kernel_main(void) {
     kernel_bootstrap();
+    //===============app bootstrap===============
+    k_printf("\n=== Appboot ===\n\n");
+    k_printf("maxslots: %d\n\n", MAX_APPS);
     start_app(init_app("init",_binary_init_bin_start,_binary_init_bin_size));
     init_app("brox", _binary_bronx_bin_start, _binary_bronx_bin_size);
     init_app("snak", _binary_snak_bin_start, _binary_snak_bin_size);
     init_app("test", _binary_test_bin_start, _binary_test_bin_size);
+    k_printf("\nApp Boot done. . .\n");
 
     yield();
     

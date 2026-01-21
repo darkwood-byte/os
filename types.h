@@ -8,4 +8,6 @@ typedef uint32_t size_t;
 typedef int  int32_t;
 #define NULL ((void*)0)
 
+#include "macros.h"//high level 
+
 #endif

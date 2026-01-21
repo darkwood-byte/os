@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-typedef uint32_t pframe_addr_t;
+
 
 typedef struct __attribute__((packed)) {
     uint32_t ra;   // x1  - return address

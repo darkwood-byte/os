@@ -11,6 +11,10 @@
 
 #define IS_PAGE_ALIGNED(addr) (((addr) & (PAGEFRAMESIZE - 1)) == 0)
 
+extern char __free_ram_start[];
+extern char __free_ram_end[];
+extern char __kernel_base[];
+
 typedef struct free_page_node {
     struct free_page_node *next;
 } free_page_node_t;

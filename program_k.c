@@ -58,21 +58,6 @@ void Flush_TLB(pcb* nextproc){
     );
 }
 
-void k_sp(void){//print de pcb status
-    k_printf("\n====active pcb's====\n");
-    for (uint32_t i = 0; i < MAXPROCS; i++){
-        if(proclist[i].pstate == NOPROC){
-            k_printf("p: %d :: does not exist\n", i);
-        }
-        else{
-            k_printf("p: %d :: state : %d  psp : %p\n", i, proclist[i].pstate, proclist[i].psp);
-            k_printf("&proclist[%d] = %p\n", i, &proclist[i]);
-
-        }
-    }
-    k_printf("\n====end of active pcb's====\n");
-}
-
 void yield(void) {
     pcb *oldproc = currproc;
     
@@ -85,7 +70,7 @@ void yield(void) {
     uint32_t start_pid = currproc ? currproc->pid + 1 : 1;
     pcb *nextproc = NULL;
 
-    // Eerste ronde: zoek READY processen, SKIP PID 0
+    // eerste rond: zoek READY processen, SKIP PID 0
     for (uint32_t i = 0; i < MAXPROCS; i++) {
         uint32_t check_pid = (start_pid + i) % MAXPROCS;
         
@@ -109,7 +94,7 @@ void yield(void) {
         nextproc = idleproc;
     }
     
-    // Als hetzelfde proces geen switch nodig anders super veel bugs
+    // als hetzelfde proces geen switch
     if (nextproc == oldproc) {
         return;
     }

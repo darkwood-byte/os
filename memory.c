@@ -1,9 +1,5 @@
 #include "memory.h"
 
-extern char __free_ram_start[];
-extern char __free_ram_end[];
-extern char __kernel_base[];
-
 static pframe_addr_t nextfreepageframe = 0;
 
 void init_memory(void) {
