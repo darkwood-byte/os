@@ -22,8 +22,8 @@
 #define SYSCALL_GET_APP_ID 0x15
 #define SYSCALL_SHUTDOWN 0x16
 #define SYSCALL_GETPCB 0x17
-
-#include "program_k.h"
+#define SYSCALL_MALLOC 0x18
+#define SYSCALL_FREE 0x19
 
 static void uint32_to_chars(uint32_t value, char buffer[5]) {
     buffer[0] = (char)((value >> 24) & 0xFF);
@@ -129,6 +129,12 @@ void handle_syscall(trap_frame *tf) {
             break;
          case SYSCALL_GETPCB:  
             tf->a0  = currproc->pid;
+            break;
+        case SYSCALL_MALLOC:
+            tf->a0  = (uint32_t)malloc(arg0);
+            break;
+        case SYSCALL_FREE:
+            free((uint8_t *)arg0);
             break;
         default:
             k_printf("Unknown syscall: %d\n", syscall_num);

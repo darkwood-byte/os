@@ -7,6 +7,8 @@
 #include "print_k.h"
 #include "app.h"
 #include "sockets.h"
+#include "malloc.h"
+#include "program_k.h"
 
 void handle_trap(trap_frame *tf) ;
 

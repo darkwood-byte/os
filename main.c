@@ -19,6 +19,9 @@ void kernel_bootstrap(void){
     write_csr(stvec, (uint32_t)switch_trap);
     k_printf("Trap handler registered at: %p\n", (uint32_t)switch_trap);
 
+    k_printf("\nClearing malloc buffers. . .\n");
+    init_malloc();
+
     init_memory();
     k_printf("Free RAM: %p - %p, size: %d megabytes\n", (uint32_t)__free_ram_start, (uint32_t)__free_ram_end, (uint32_t)((uint32_t)__free_ram_start- (uint32_t)__free_ram_end) / 1000000);
     
@@ -60,7 +63,6 @@ void kernel_main(void) {
     k_printf("\nApp Boot done. . .\n");
 
     yield();
-    
     k_panic("now in PID 0 (idlin') ...", "");
 }
 

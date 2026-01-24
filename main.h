@@ -16,6 +16,7 @@
 
 //Memory management
 #include "memory.h"
+#include "malloc.h"
 
 //proces mangement
 #include "pcb_k.h"
