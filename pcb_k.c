@@ -80,6 +80,8 @@ pcb *spawn_proc(uint32_t image, uint32_t imagesize) {
         add_ptbl_entry(p->pdbr, pfa, pfa, PTE_FLG_R | PTE_FLG_W | PTE_FLG_X);
         page_count++;
     }
+
+
     
     if (image != (uint32_t)NULL && imagesize > 0) {
         

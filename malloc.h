@@ -4,6 +4,9 @@
 #include "types.h"
 #include "panic_k.h"
 #include "mem.h"
+#include "memory.h"
+
+extern uint8_t *mallocbuffer;
 
 uint8_t *malloc(uint32_t size);
 

@@ -6,6 +6,7 @@
 #include "trap_frame_k.h"
 #include "memory.h"
 #include "csr.h"
+#include "malloc.h"
 
 #define MAXPROCS 12
 
