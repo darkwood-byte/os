@@ -22,9 +22,9 @@ void kernel_bootstrap(void){
     init_memory();
     k_printf("Free RAM: %p - %p, size: %d megabytes\n", (uint32_t)__free_ram_start, (uint32_t)__free_ram_end, (uint32_t)((uint32_t)__free_ram_start- (uint32_t)__free_ram_end) / 1000000);
     
-    k_printf("\nClearing malloc buffers. . .\n");
     init_malloc();
-    
+    k_printf("Maloc buffer: %p - %p, total size: %d kilobytes\n", mallocbuffer, mallocbuffer + MALOCPAGECOUNT * PAGEFRAMESIZE, (uint32_t)((MALOCPAGECOUNT * PAGEFRAMESIZE)/1000));
+
     k_printf("\nMaking kernel idle process pcb:\n\n");
 
    __spawn_kernel();
@@ -62,18 +62,6 @@ void kernel_main(void) {
     init_app("test", _binary_test_bin_start, _binary_test_bin_size);
     k_printf("\nApp Boot done. . .\n");
 
-    k_printf("%p\n", malloc(3));
-    k_printf("%p\n", malloc(3));
-    k_printf("%p\n", malloc(30));
-    k_printf("%p\n", malloc(3));
-    k_printf("%p\n", malloc(3));
-    k_printf("%p\n", malloc(3));
-    k_printf("page%p\n", pageframalloc(40));
-    k_printf("page%p\n", pageframalloc(40));
-    uint32_t *t = pageframalloc(1);
-    *t = 1;
-    k_printf("t = %d\n", *t);
-    k_printf("kernel test done\n");
     yield();
     k_panic("now in PID 0 (idlin') ...", "");
 }

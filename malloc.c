@@ -1,10 +1,5 @@
 #include "malloc.h"
 
-#define MALSEGS 10000
-#define SEGSIZE 16
-#define MALBUFFERSIZE (MALSEGS * SEGSIZE)
-#define MALOCPAGECOUNT ((uint32_t)(MALBUFFERSIZE / PAGEFRAMESIZE)+1)
-
 uint8_t *mallocbuffer;
 static uint8_t mallocmetabuffer[MALSEGS];
 
@@ -29,7 +24,7 @@ uint8_t *malloc(uint32_t size){
 }
 
 void init_malloc(void){
-    mallocbuffer = pageframalloc(MALOCPAGECOUNT);
+    mallocbuffer = (uint8_t *)pageframalloc(MALOCPAGECOUNT);
     memset(mallocbuffer, 0, MALBUFFERSIZE);
     memset(mallocmetabuffer, 0, MALSEGS);
 }

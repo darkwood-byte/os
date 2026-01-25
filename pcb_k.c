@@ -73,7 +73,7 @@ pcb *spawn_proc(uint32_t image, uint32_t imagesize) {
         return NULL;
     }
     
-    uint32_t page_count = 0;
+    uint32_t page_count = 0;//kernel is protected
     for (uint32_t pfa = (uint32_t)__kernel_base; 
          pfa < (uint32_t)__free_ram_end; 
          pfa += PAGEFRAMESIZE) {
@@ -81,7 +81,13 @@ pcb *spawn_proc(uint32_t image, uint32_t imagesize) {
         page_count++;
     }
 
-
+    page_count = 0;//malloc buffer may be used by all
+    for (uint32_t pfa = (uint32_t)mallocbuffer; 
+         pfa < (uint32_t)(MALBUFFERSIZE + mallocbuffer); 
+         pfa += PAGEFRAMESIZE) {
+        add_ptbl_entry(p->pdbr, pfa, pfa,   PTE_FLG_U | PTE_FLG_R | PTE_FLG_W | PTE_FLG_X);
+        page_count++;
+    }
     
     if (image != (uint32_t)NULL && imagesize > 0) {
         
@@ -101,7 +107,7 @@ pcb *spawn_proc(uint32_t image, uint32_t imagesize) {
             
             k_memcpy((void *)pageframe, (void *)(image + bytecount), bytes_to_copy);
             
-            add_ptbl_entry(p->pdbr, 
+            add_ptbl_entry(p->pdbr, //proc
                           (USR_BASE_VA + bytecount), 
                           pageframe, 
                           PTE_FLG_U | PTE_FLG_R | PTE_FLG_W | PTE_FLG_X);
