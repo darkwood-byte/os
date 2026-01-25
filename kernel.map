@@ -1,7 +1,7 @@
      VMA      LMA     Size Align Out     In      Symbol
        0        0 80200000     1 . = 0x80200000
 80200000        0        0     1 __kernel_base = .
-80200000 80200000     21f0     4 .text
+80200000 80200000     21c2     4 .text
 80200000 80200000        e     2         build/main.o:(.text.boot)
 80200000 80200000        0     1                 
 80200000 80200000        0     1                 
@@ -1550,7 +1550,7 @@
 802020b6 802020b6        0     1                 
 802020bc 802020bc        0     1                 
 802020bc 802020bc        0     1                 
-802020bc 802020bc      134     4         build/malloc.o:(.text)
+802020bc 802020bc      106     4         build/malloc.o:(.text)
 802020bc 802020bc        0     1                 
 802020bc 802020bc        0     1                 
 802020bc 802020bc        0     1                 
@@ -1602,75 +1602,69 @@
 80202170 80202170        0     1                 
 80202170 80202170        0     1                 
 80202170 80202170        0     1                 
-80202170 80202170       80     1                 free
+80202170 80202170        0     1                 
+80202170 80202170       52     1                 free
 80202172 80202172        0     1                 
-80202172 80202172        0     1                 
-80202178 80202178        0     1                 
 8020217a 8020217a        0     1                 
-80202182 80202182        0     1                 
-80202198 80202198        0     1                 
+80202190 80202190        0     1                 
+80202194 80202194        0     1                 
+80202196 80202196        0     1                 
+8020219a 8020219a        0     1                 
 8020219c 8020219c        0     1                 
-802021a0 802021a0        0     1                 
-802021a4 802021a4        0     1                 
-802021a6 802021a6        0     1                 
-802021a8 802021a8        0     1                 
+8020219e 8020219e        0     1                 
+802021ae 802021ae        0     1                 
+802021b2 802021b2        0     1                 
+802021b4 802021b4        0     1                 
 802021b8 802021b8        0     1                 
 802021ba 802021ba        0     1                 
-802021be 802021be        0     1                 
-802021c8 802021c8        0     1                 
-802021cc 802021cc        0     1                 
-802021d0 802021d0        0     1                 
-802021da 802021da        0     1                 
-802021da 802021da        0     1                 
-802021e8 802021e8        0     1                 
-802021f0 802021f0        0     1                 
-802021f0 802021f0        0     1                 
-802021f0 802021f0      ab8     4 .rodata
-802021f0 802021f0      9a4     1         <internal>:(.rodata)
-80202b94 80202b94       58     4         build/print_k.o:(.rodata)
-80202b94 80202b94        0     1                 .LJTI0_0
-80202bec 80202bec       58     4         build/str.o:(.rodata)
-80202bec 80202bec        0     1                 .LJTI2_0
-80202c44 80202c44       64     4         build/trap_k.o:(.rodata)
-80202c44 80202c44        0     1                 .LJTI0_0
-80202ca8 80202ca8    26ff0     4 .data
-80202ca8 80202ca8     9eb0     1         bronx.o:(.data)
-80202ca8 80202ca8        0     1                 _binary_bronx_bin_start
-8020cb58 8020cb58        0     1                 _binary_bronx_bin_end
-8020cb58 8020cb58     8240     1         init.o:(.data)
-8020cb58 8020cb58        0     1                 _binary_init_bin_start
-80214d98 80214d98        0     1                 _binary_init_bin_end
-80214d98 80214d98     c5a0     1         snak.o:(.data)
-80214d98 80214d98        0     1                 _binary_snak_bin_start
-80221338 80221338        0     1                 _binary_snak_bin_end
-80221338 80221338     8960     1         test.o:(.data)
-80221338 80221338        0     1                 _binary_test_bin_start
-80229c98 80229c98        0     1                 _binary_test_bin_end
-80229c98 80229c98     8128     4 .bss
-80229c98 80229c98        0     1         __bss = .
-80229c98 80229c98        4     4         build/memory.o:(.sbss)
-80229c98 80229c98        4     1                 nextfreepageframe
-80229c9c 80229c9c        8     4         build/pcb_k.o:(.sbss)
-80229c9c 80229c9c        4     1                 currproc
-80229ca0 80229ca0        4     1                 idleproc
-80229ca4 80229ca4     30f0     4         build/pcb_k.o:(.bss)
-80229ca4 80229ca4     30f0     1                 proclist
-8022cd94 8022cd94       a0     4         build/app.o:(.bss)
-8022cd94 8022cd94       a0     1                 app_list
-8022ce34 8022ce34     2878     4         build/sockets.o:(.bss)
-8022ce34 8022ce34       28     1                 rsockets
-8022ce5c 8022ce5c       28     1                 rsocket_info
-8022ce84 8022ce84     2800     1                 sockets
-8022f684 8022f684       28     1                 socket_info
-8022f6ac 8022f6ac        4     4         build/malloc.o:(.sbss)
-8022f6ac 8022f6ac        4     1                 mallocbuffer
-8022f6b0 8022f6b0     2710     1         build/malloc.o:(.bss)
-8022f6b0 8022f6b0     2710     1                 mallocmetabuffer
-80231dc0 80231dc0        0     1         __bss_end = .
-80231dc0 80231dc0        0     1 . = ALIGN ( 4 )
-80231dc0 80231dc0    20000     1 . += 128 * 1024
-80251dc0 80251dc0        0     1 __stack_top = .
-80251dc0 80251dc0      240     1 . = ALIGN ( 4096 )
+802021c2 802021c2        0     1                 
+802021c2 802021c2        0     1                 
+802021c4 802021c4      ab8     4 .rodata
+802021c4 802021c4      9a4     1         <internal>:(.rodata)
+80202b68 80202b68       58     4         build/print_k.o:(.rodata)
+80202b68 80202b68        0     1                 .LJTI0_0
+80202bc0 80202bc0       58     4         build/str.o:(.rodata)
+80202bc0 80202bc0        0     1                 .LJTI2_0
+80202c18 80202c18       64     4         build/trap_k.o:(.rodata)
+80202c18 80202c18        0     1                 .LJTI0_0
+80202c7c 80202c7c    27030     4 .data
+80202c7c 80202c7c     9f10     1         bronx.o:(.data)
+80202c7c 80202c7c        0     1                 _binary_bronx_bin_start
+8020cb8c 8020cb8c        0     1                 _binary_bronx_bin_end
+8020cb8c 8020cb8c     8240     1         init.o:(.data)
+8020cb8c 8020cb8c        0     1                 _binary_init_bin_start
+80214dcc 80214dcc        0     1                 _binary_init_bin_end
+80214dcc 80214dcc     c580     1         snak.o:(.data)
+80214dcc 80214dcc        0     1                 _binary_snak_bin_start
+8022134c 8022134c        0     1                 _binary_snak_bin_end
+8022134c 8022134c     8960     1         test.o:(.data)
+8022134c 8022134c        0     1                 _binary_test_bin_start
+80229cac 80229cac        0     1                 _binary_test_bin_end
+80229cac 80229cac     8128     4 .bss
+80229cac 80229cac        0     1         __bss = .
+80229cac 80229cac        4     4         build/memory.o:(.sbss)
+80229cac 80229cac        4     1                 nextfreepageframe
+80229cb0 80229cb0        8     4         build/pcb_k.o:(.sbss)
+80229cb0 80229cb0        4     1                 currproc
+80229cb4 80229cb4        4     1                 idleproc
+80229cb8 80229cb8     30f0     4         build/pcb_k.o:(.bss)
+80229cb8 80229cb8     30f0     1                 proclist
+8022cda8 8022cda8       a0     4         build/app.o:(.bss)
+8022cda8 8022cda8       a0     1                 app_list
+8022ce48 8022ce48     2878     4         build/sockets.o:(.bss)
+8022ce48 8022ce48       28     1                 rsockets
+8022ce70 8022ce70       28     1                 rsocket_info
+8022ce98 8022ce98     2800     1                 sockets
+8022f698 8022f698       28     1                 socket_info
+8022f6c0 8022f6c0        4     4         build/malloc.o:(.sbss)
+8022f6c0 8022f6c0        4     1                 mallocbuffer
+8022f6c4 8022f6c4     2710     1         build/malloc.o:(.bss)
+8022f6c4 8022f6c4     2710     1                 mallocmetabuffer
+80231dd4 80231dd4        0     1         __bss_end = .
+80231dd4 80231dd4        0     1 . = ALIGN ( 4 )
+80231dd4 80231dd4    20000     1 . += 128 * 1024
+80251dd4 80251dd4        0     1 __stack_top = .
+80251dd4 80251dd4      22c     1 . = ALIGN ( 4096 )
 80252000 80252000        0     1 __free_ram_start = .
 80252000 80252000  2000000     1 . += 32 * 1024 * 1024
 82252000 82252000        0     1 __free_ram_end = .
@@ -1688,7 +1682,7 @@
      c4c      c4c      142     1         build/app.o:(.debug_abbrev)
      d8e      d8e      10d     1         build/sockets.o:(.debug_abbrev)
      e9b      e9b      155     1         build/malloc.o:(.debug_abbrev)
-       0        0     1e1e     1 .debug_info
+       0        0     1e18     1 .debug_info
        0        0      1f3     1         build/main.o:(.debug_info)
      1f3      1f3      1e5     1         build/print_k.o:(.debug_info)
      3d8      3d8      3e6     1         build/SBI.o:(.debug_info)
@@ -1701,7 +1695,7 @@
     15f7     15f7      195     1         build/program_k.o:(.debug_info)
     178c     178c      25a     1         build/app.o:(.debug_info)
     19e6     19e6      2c5     1         build/sockets.o:(.debug_info)
-    1cab     1cab      173     1         build/malloc.o:(.debug_info)
+    1cab     1cab      16d     1         build/malloc.o:(.debug_info)
        0        0      18a     1 .debug_rnglists
        0        0       18     1         build/main.o:(.debug_rnglists)
        c        c        0     1                 
@@ -1746,7 +1740,7 @@
      7a8      7a8        0     1                 
        0        0      825     1 .debug_str
        0        0      825     1         <internal>:(.debug_str)
-       0        0      3dc     1 .debug_addr
+       0        0      3d8     1 .debug_addr
        0        0       74     1         build/main.o:(.debug_addr)
        8        8        0     1                 
       74       74       50     1         build/print_k.o:(.debug_addr)
@@ -1771,13 +1765,13 @@
      2bc      2bc        0     1                 
      314      314       90     1         build/sockets.o:(.debug_addr)
      31c      31c        0     1                 
-     3a4      3a4       38     1         build/malloc.o:(.debug_addr)
+     3a4      3a4       34     1         build/malloc.o:(.debug_addr)
      3ac      3ac        0     1                 
        0        0       42     1 .comment
        0        0       42     1         <internal>:(.comment)
        0        0       2b     1 .riscv.attributes
        0        0       2b     1         build/main.o:(.riscv.attributes)
-       0        0      540     4 .debug_frame
+       0        0      534     4 .debug_frame
        0        0       54     4         build/main.o:(.debug_frame)
        0        0        0     1                 
       54       54       44     4         build/print_k.o:(.debug_frame)
@@ -1802,9 +1796,9 @@
      33c      33c        0     1                 
      3b4      3b4      134     4         build/sockets.o:(.debug_frame)
      3b4      3b4        0     1                 
-     4e8      4e8       58     4         build/malloc.o:(.debug_frame)
+     4e8      4e8       4c     4         build/malloc.o:(.debug_frame)
      4e8      4e8        0     1                 
-       0        0     2af3     1 .debug_line
+       0        0     2ad9     1 .debug_line
        0        0      1df     1         build/main.o:(.debug_line)
        0        0        0     1                 .Lline_table_start0
      1df      1df      2d0     1         build/print_k.o:(.debug_line)
@@ -1829,11 +1823,11 @@
     1ce1     1ce1        0     1                 .Lline_table_start0
     212d     212d      7a3     1         build/sockets.o:(.debug_line)
     212d     212d        0     1                 .Lline_table_start0
-    28d0     28d0      223     1         build/malloc.o:(.debug_line)
+    28d0     28d0      209     1         build/malloc.o:(.debug_line)
     28d0     28d0        0     1                 .Lline_table_start0
        0        0      103     1 .debug_line_str
        0        0      103     1         <internal>:(.debug_line_str)
-       0        0     11cc     1 .debug_loclists
+       0        0     11d5     1 .debug_loclists
        0        0      115     1         build/print_k.o:(.debug_loclists)
        c        c        0     1                 
      115      115      10c     1         build/SBI.o:(.debug_loclists)
@@ -1856,10 +1850,10 @@
      ca9      ca9        0     1                 
      e30      e30      32d     1         build/sockets.o:(.debug_loclists)
      e3c      e3c        0     1                 
-    115d     115d       6f     1         build/malloc.o:(.debug_loclists)
+    115d     115d       78     1         build/malloc.o:(.debug_loclists)
     1169     1169        0     1                 
-       0        0     8a90     4 .symtab
-       0        0     8a90     4         <internal>:(.symtab)
+       0        0     8a30     4 .symtab
+       0        0     8a30     4         <internal>:(.symtab)
        0        0       dc     1 .shstrtab
        0        0       dc     1         <internal>:(.shstrtab)
        0        0      6c1     1 .strtab

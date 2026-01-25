@@ -39,6 +39,5 @@ void free(uint8_t *p){
 
     if(mallocmetabuffer[current_seg] <= 1)return;
 
-    memset(p, 0, seg_ammount * SEGSIZE);
     memset(mallocmetabuffer + current_seg, 0, seg_ammount);
 }
